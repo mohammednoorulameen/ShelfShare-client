@@ -1,35 +1,74 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter } from "react-router-dom";
+import { Suspense } from "react";
+import AppRoutes from "./app/routes/AppRoutes";
+import { LoadingPage } from "./shared/LoadingPage";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "react-hot-toast";
+import { Provider } from "react-redux";
+import { store } from "./app/store/store";
 
-function App() {
-  const [count, setCount] = useState(0)
 
+const queryClient = new QueryClient()
+
+export default function App() {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <BrowserRouter>
+     <Toaster toastOptions={{
+    style: {
+      fontSize: "12px",
+      padding: "6px 10px",
+      borderRadius: "6px",
+      minWidth: "180px",
+    },
+    success: {
+      style: {
+        background: "#4f46e5",
+        color: "white",
+      },
+      iconTheme: {
+        primary: "white",
+        secondary: "#4f46e5",
+      },
+    },
+    error: {
+      style: {
+        background: "#ef4444",
+        color: "white",
+      },
+      iconTheme: {
+        primary: "white",
+        secondary: "#ef4444",
+      },
+    },
+  }}
+ position="top-right" reverseOrder={false} />
+      <Suspense
+        fallback={
+          <div>
+            {" "}
+            <LoadingPage />{" "}
+          </div>
+        }
+      >
+        <QueryClientProvider client={queryClient}>
+          < Provider store={store}>
+          <AppRoutes />
+          </Provider>
+        </QueryClientProvider>
+      </Suspense>
+    </BrowserRouter>
+  );
 }
 
-export default App
+// import reactLogo from './assets/react.svg'
+// import './App.css'
+
+// const App = () => {
+//   return (
+//     <div>
+
+//     </div>
+//   )
+// }
+
+// export default App

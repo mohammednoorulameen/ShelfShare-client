@@ -1,0 +1,55 @@
+import { Formik } from "formik";
+import LoginForm from "../../common/components/LoginForm";
+import { LoginValidationSchema } from "../../common/components/Validations";
+import { useUserLoginMutation } from "../api/UserAuthApi";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "@/app/constants/messages";
+import { isAxiosError } from "axios";
+import { redirectByRole } from "../../../../app/routes/RedirectByRole/RoleRedirection";
+import { useDispatch } from "react-redux";
+import { setAuthLogin } from "../../common/slices/authSlice";
+
+const UserLoginPage = () => {
+  const loginMutation = useUserLoginMutation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  return (
+    <Formik
+      initialValues={{ email: "", password: "" }}
+      validationSchema={LoginValidationSchema}
+      onSubmit={(values) => {
+        loginMutation.mutate(
+          { ...values, role: "user" },
+          {
+            onSuccess: (response) => {
+              toast.success(SUCCESS_MESSAGES.LOGIN_SUCCESS);
+              const user = response.data;
+              dispatch(
+                setAuthLogin({
+                  email: user.email,
+                  role: user.role,
+                  userId: user.userId,
+                  vendorId: user.vendorId,
+                })
+              );
+              const redirectPath = redirectByRole(response.data.role);
+              navigate(redirectPath);
+            },
+            onError: (error) => {
+              let message = ERROR_MESSAGES.SOMETHING_WENT_WRONG;
+              if (isAxiosError(error)) {
+                message = error.response?.data?.message || message;
+              }
+              toast.error(message);
+            },
+          }
+        );
+      }}
+    >
+      <LoginForm type="user" />
+    </Formik>
+  );
+};
+
+export default UserLoginPage;
