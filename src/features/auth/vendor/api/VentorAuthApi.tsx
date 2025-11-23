@@ -18,7 +18,6 @@ export const useVendorLoginMutation = ()=>{
     return useMutation({
         mutationFn:async(payload: ILoginPayload)=>{
             const response = await AxiosInstance.post('/auth/login',payload)
-            console.log('payload', response.data)
             return response.data
         }
     })

@@ -30,7 +30,7 @@ const UserLoginPage = () => {
                   email: user.email,
                   role: user.role,
                   userId: user.userId,
-                  vendorId: user.vendorId,
+                  // vendorId: user.vendorId,
                 })
               );
               const redirectPath = redirectByRole(response.data.role);

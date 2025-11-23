@@ -27,3 +27,4 @@ export const redirectByRoleLogin = (role: Role) => {
 };
 
 // http://localhost:5173/auth/admin/login
+// /auth/vendor/login

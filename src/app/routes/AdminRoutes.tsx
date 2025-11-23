@@ -5,7 +5,7 @@ import { Role } from "@/types/role.enum";
 const AdminLayout = lazy(() => import( "@/features/home/admin/adminLayout/AdminLayout"));
 const Greeting = lazy(() => import( "@/features/home/common/Greeting"));
 const AdminOverviewPage = lazy(() => import( "@/features/overview/admin/pages/AdminOverviewPage"));
-const VendorManagementPage = lazy(() => import( "@/features/management/admin/pages/VendorManagementPage"));
+const VendorMgmntPage = lazy(() => import( "@/features/management/admin/pages/VendorMgmntPage"));
 
 export const AdminRoutes: RouteObject[] = [
   {
@@ -28,7 +28,7 @@ export const AdminRoutes: RouteObject[] = [
         path: "vendormanagement",
         element: (
           <ProtectedRoute allowedRoles={[Role.ADMIN]}>
-            <VendorManagementPage/>
+            <VendorMgmntPage/>
          </ProtectedRoute>
         ),
       },
