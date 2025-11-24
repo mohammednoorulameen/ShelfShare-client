@@ -3,23 +3,29 @@ import type { AuthSliceState, LoginPayload } from "../../types/authSlice.type";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 const getSavedState = () => {
+  const path = window.location.pathname;
+
+  let isWho: "admin" | "user" | "vendor" | null = null;
+
+  if (path.startsWith("/admin") || path.startsWith("/auth/admin")) isWho = "admin";
+  else if (path.startsWith("/user") || path.startsWith("/auth/user") || path.startsWith("/")) isWho = "user";
+  else if (path.startsWith("/vendor") || path.startsWith("/auth/vendor")) isWho = "vendor";
+
   const admin = localStorage.getItem("adminAuth");
   const user = localStorage.getItem("userAuth");
   const vendor = localStorage.getItem("vendorAuth");
 
-  return admin
-    ? JSON.parse(admin)
-    : user
-    ? JSON.parse(user)
-    : vendor
-    ? JSON.parse(vendor)
-    : {
-        email: null,
-        role: null,
-        vendorId: null,
-        userId: null,
-        isAuthenticated: false,
-      };
+  if (isWho === "admin" && admin) return JSON.parse(admin);
+  if (isWho === "user" && user) return JSON.parse(user);
+  if (isWho === "vendor" && vendor) return JSON.parse(vendor);
+
+  return {
+    email: null,
+    role: null,
+    vendorId: null,
+    userId: null,
+    isAuthenticated: false,
+  };
 };
 
 const initialState: AuthSliceState = getSavedState();

@@ -17,10 +17,10 @@ const VerificationPage = lazy(
 
 export const AuthRoutes: RouteObject[] = [
   {
-    path: "/auth",
+    path: "/",
     children: [
       {
-        path: "user/login",
+        path: "auth/user/login",
         element: (
           <AuthProtectorRoute>
             <UserLoginpage />
@@ -28,7 +28,15 @@ export const AuthRoutes: RouteObject[] = [
         ),
       },
       {
-        path: "user/register",
+        path: "/",
+        element: (
+          <AuthProtectorRoute>
+            <UserLoginpage />
+          </AuthProtectorRoute>
+        ),
+      },
+      {
+        path: "auth/user/register",
         element: (
           <AuthProtectorRoute>
             <UserRegisterPage />
@@ -36,7 +44,7 @@ export const AuthRoutes: RouteObject[] = [
         ),
       },
       {
-        path: "emailverification",
+        path: "auth/emailverification",
         element: (
           <AuthProtectorRoute>
             <VerificationPage />
@@ -44,14 +52,14 @@ export const AuthRoutes: RouteObject[] = [
         ),
       },
       {
-        path: "vendor/register",
+        path: "auth/vendor/register",
         element: (
           <AuthProtectorRoute>
             <VendorRegisterPage />
           </AuthProtectorRoute>
         ),
       },{
-        path: "vendor/login",
+        path: "auth/vendor/login",
         element:(
           <AuthProtectorRoute>
             <VendorLoginPage/>
@@ -60,7 +68,7 @@ export const AuthRoutes: RouteObject[] = [
       },
 
       {
-        path: "admin/login",
+        path: "auth/admin/login",
         element:(
           <AuthProtectorRoute>
             <AdminLoginPage/>
