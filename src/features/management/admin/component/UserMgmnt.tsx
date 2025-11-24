@@ -19,7 +19,7 @@ import type { User, UserMgmntProps } from "../../types/responseUser.types";
 
 const getVendorStatus = (user: User) => {
   if (!user.isEmailVerified)
-    return { label: "Email not verified", type: "emailPending" };
+    return { label: " ENverified", type: "emailPending" };
 
   if (user.status === "blocked") return { label: "Blocked", type: "blocked" };
   return { label: "verified", type: "verified" };
@@ -92,7 +92,7 @@ const UserMgmnt: React.FC<UserMgmntProps> = ({
             <thead>
               <tr className="bg-slate-50 border-b border-slate-200">
                 <th className="px-5 py-3 text-[10px] font-semibold text-slate-500 uppercase tracking-wide">
-                  Vendor
+                  User
                 </th>
                 <th className="px-5 py-3 text-[10px] font-semibold text-slate-500 uppercase tracking-wide">
                   Contact
