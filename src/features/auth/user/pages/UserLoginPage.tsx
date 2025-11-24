@@ -33,6 +33,7 @@ const UserLoginPage = () => {
                   // vendorId: user.vendorId,
                 })
               );
+              console.log("checke the role ",response.data.role)
               const redirectPath = redirectByRole(response.data.role);
               navigate(redirectPath);
             },

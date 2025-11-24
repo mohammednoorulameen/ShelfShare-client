@@ -1,5 +1,5 @@
 import { AxiosInstance } from "@/lib/axios/axios"
-import type { VendorListResponse } from "../../types/response.types"
+import type { VendorListResponse } from "../../types/responseVendor.types"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 

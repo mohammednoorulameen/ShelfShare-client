@@ -16,6 +16,7 @@ import useLogout from "@/app/hooks/useLogout";
 const menuItems = [
   { icon: LayoutDashboard, label: "Overview", path: "overview" },
   { icon: Users, label: "Vendor", path: "vendormanagement" },
+  { icon: Users, label: "Users", path: "usermanagement" },
   { icon: BookOpen, label: "Book Management", path: "books" },
   { icon: Calendar, label: "Event Management", path: "events" },
   { icon: CreditCard, label: "Transaction Mgmt", path: "transactions" },

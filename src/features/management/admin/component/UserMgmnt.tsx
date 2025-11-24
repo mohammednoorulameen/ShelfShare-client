@@ -4,48 +4,44 @@ import {
   Filter,
   Mail,
   Phone,
-  ShieldCheck,
   ShieldAlert,
   CheckCircle,
   XCircle,
   Shield,
 } from "lucide-react";
-import type { VendorMgmntProps, Vendor } from "../../types/responseVendor.types";
+import type { User, UserMgmntProps } from "../../types/responseUser.types";
+
 
 /*------
   Vendor status checking
  -----------------------*/
 
 
-const getVendorStatus = (vendor: Vendor) => {
-  if (!vendor.isEmailVerified)
-    return { label: "Email not verified", type: "emailPending" };
+const getVendorStatus = (user: User) => {
+  if (!user.isEmailVerified)
+    return { label: " ENverified", type: "emailPending" };
 
-  if (vendor.status === "blocked") return { label: "Blocked", type: "blocked" };
-
-  if (!vendor.isAdminVerified)
-    return { label: "Pending admin approval", type: "pending" };
+  if (user.status === "blocked") return { label: "Blocked", type: "blocked" };
   return { label: "verified", type: "verified" };
 };
 
 const fallbackImg = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
-const VendorMgmnt: React.FC<VendorMgmntProps> = ({
-  vendors,
+const UserMgmnt: React.FC<UserMgmntProps> = ({
+  users,
   page,
   totalPages,
   setPage,
   isLoading,
   isError,
-  onToggleBlock,
-  onToggleVerify
+  onToggleBlock
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredVendors = vendors.filter(
-    (vendor) =>
-      vendor.bussinessName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      vendor.email.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredVendors = users.filter(
+    (user) =>
+      user.userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   if (isLoading)
@@ -64,10 +60,10 @@ const VendorMgmnt: React.FC<VendorMgmntProps> = ({
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <div>
           <h2 className="text-xl font-semibold text-slate-800">
-            Vendor Management
+            User Management
           </h2>
           <p className="text-xs text-slate-500 mt-0.5">
-            Manage vendor accounts, verification & access
+            Manage User accounts access
           </p>
         </div>
 
@@ -76,7 +72,7 @@ const VendorMgmnt: React.FC<VendorMgmntProps> = ({
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input
               type="text"
-              placeholder="Search vendor..."
+              placeholder="Search user..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-md text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm"
@@ -96,7 +92,7 @@ const VendorMgmnt: React.FC<VendorMgmntProps> = ({
             <thead>
               <tr className="bg-slate-50 border-b border-slate-200">
                 <th className="px-5 py-3 text-[10px] font-semibold text-slate-500 uppercase tracking-wide">
-                  Vendor
+                  User
                 </th>
                 <th className="px-5 py-3 text-[10px] font-semibold text-slate-500 uppercase tracking-wide">
                   Contact
@@ -111,8 +107,8 @@ const VendorMgmnt: React.FC<VendorMgmntProps> = ({
             </thead>
 
             <tbody className="divide-y divide-slate-100">
-              {filteredVendors.map((vendor) => {
-                const { label, type } = getVendorStatus(vendor);
+              {filteredVendors.map((user) => {
+                const { label, type } = getVendorStatus(user);
 
                 const badgeClasses =
                   type === "verified"
@@ -131,25 +127,25 @@ const VendorMgmnt: React.FC<VendorMgmntProps> = ({
                     : Shield;
 
                 return (
-                  <tr key={vendor._id} className="hover:bg-slate-50 transition">
+                  <tr key={user._id} className="hover:bg-slate-50 transition">
                     <td className="px-5 py-3">
                       <div className="flex items-center gap-3">
                         <img
-                          src={vendor.imageKey || fallbackImg}
-                          alt={vendor.bussinessName}
+                          src={user.imageKey || fallbackImg}
+                          alt={user.userName}
                           className="w-9 h-9 rounded-full object-cover border border-slate-100"
                         />
 
                         <div>
                           <p className="font-medium text-sm text-slate-900 flex items-center gap-1">
-                            {vendor.bussinessName}
-                            {vendor.isAdminVerified && (
+                            {user.userName}
+                            {user.isEmailVerified && (
                               <CheckCircle className="w-3.5 h-3.5 text-green-500" />
                             )}
                           </p>
 
                           <p className="text-[11px] text-slate-500">
-                            {vendor.vendorId}
+                            {user.userId}
                           </p>
                         </div>
                       </div>
@@ -159,11 +155,11 @@ const VendorMgmnt: React.FC<VendorMgmntProps> = ({
                       <div className="flex flex-col gap-1">
                         <div className="flex items-center gap-1.5 text-xs text-slate-600">
                           <Mail className="w-3.5 h-3.5 text-slate-400" />
-                          {vendor.email}
+                          {user.email}
                         </div>
                         <div className="flex items-center gap-1.5 text-xs text-slate-600">
                           <Phone className="w-3.5 h-3.5 text-slate-400" />
-                          {vendor.phoneNumber}
+                          {user.phoneNumber}
                         </div>
                       </div>
                     </td>
@@ -179,26 +175,17 @@ const VendorMgmnt: React.FC<VendorMgmntProps> = ({
 
                     <td className="px-5 py-3 text-right">
                       <div className="flex items-center justify-end gap-2">
-                        {type !== "verified" && (
-                          
-                          <button
-                          onClick={() => onToggleVerify(vendor._id as string)}
-                           className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium text-white bg-green-500 rounded-md hover:bg-green-600 transition shadow-sm">
-                            <ShieldCheck className="w-3.5 h-3.5" />
-                            Verify
-                          </button>
-                        )}
-
+                       
                         {type !== "blocked" ? (
                           <button 
-                          onClick={() => onToggleBlock(vendor._id)}
+                          onClick={()=> onToggleBlock(user._id)}
                           className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium text-red-600 bg-white border border-red-200 rounded-md hover:bg-red-50 transition shadow-sm">
                             <ShieldAlert className="w-3.5 h-3.5" />
                             Block
                           </button>
                         ) : (
                           <button
-                          onClick={() => onToggleBlock(vendor._id)}
+                          onClick={()=> onToggleBlock(user._id)}
                            className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium text-slate-600 bg-white border border-slate-200 rounded-md hover:bg-slate-50 transition shadow-sm">
                             <Shield className="w-3.5 h-3.5" />
                             Unblock
@@ -242,4 +229,4 @@ const VendorMgmnt: React.FC<VendorMgmntProps> = ({
   );
 };
 
-export default VendorMgmnt;
+export default UserMgmnt;
