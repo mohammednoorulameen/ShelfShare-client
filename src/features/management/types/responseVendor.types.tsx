@@ -4,7 +4,7 @@
    Get all Vendors response type
  ----------------------------------------*/
 
-import type React from "react";
+// import type React from "react";
 
 
 export interface Vendor {
@@ -31,8 +31,6 @@ export interface VendorListResponse {
   totalPages: number;
 }
 
-
-
 export interface VendorMgmntProps{
   vendors : Vendor[];
   page : number;
@@ -40,6 +38,10 @@ export interface VendorMgmntProps{
   setPage: React.Dispatch<React.SetStateAction<number>>
   isLoading : boolean;
   isError : boolean;
-  onToggleBlock: (vendorId: string)=> void
+  onToggleBlock:(vendorId: string)=> void
   onToggleVerify:(vendorId: string)=> void
 }
+
+
+
+ 
