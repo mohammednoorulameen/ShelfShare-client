@@ -24,3 +24,4 @@ const AuthProtectorRoute = ({ children }: { children: ReactNode }) => {
 };
 
 export default AuthProtectorRoute;
+
