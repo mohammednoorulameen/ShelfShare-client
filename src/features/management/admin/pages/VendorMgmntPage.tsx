@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import VendorMgmnt from '../component/VendorMgmnt'
-import { useBlockVentor, useGetVentors, useVerifyVentor } from '../api/adminMgmntApi';
-import type { Vendor } from '../../types/response.types';
+import { useBlockVentor, useGetVentors, useVerifyVentor } from '../api/adminVendorMgmntApi';
+import type { Vendor } from '../../types/responseVendor.types';
 
 const VendorMgmntPage = () => {
   const [page, setPage] = useState(1);
