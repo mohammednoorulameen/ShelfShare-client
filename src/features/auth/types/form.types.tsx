@@ -68,6 +68,7 @@ export interface RegisterFormProps {
 
 export interface LoginFormProps {
   type: "user" | "vendor" | "admin";
+   googleLogin?: (idToken: string) => void;
 }
 
 export interface FloatingInputProps {
@@ -82,3 +83,5 @@ export interface ILoginPayload {
   password: string;
   role: "user" | "vendor" | "admin";
 }
+
+

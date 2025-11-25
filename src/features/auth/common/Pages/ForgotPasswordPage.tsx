@@ -6,22 +6,19 @@ import { useVerifyForgotPassword } from '../api/CommonApi'
 import toast from 'react-hot-toast'
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@/app/constants/messages'
 import { isAxiosError } from 'axios'
-import { useSearchParams } from 'react-router-dom'
-import { Role } from '@/types/role.enum'
 
-const ForgotPasswordPage = () => {
+const ForgotPasswordPage: React.FC<{role : "user" | "vendor"}> = ({ role }) => {
    const { mutate } = useVerifyForgotPassword();
-    const [params] = useSearchParams();
-   const assingRole = params.get("role") || "user";
 
 
    
-   const role: Role =
-     assingRole === "user" ? Role.USER :
-     assingRole === "vendor" ? Role.VENDOR :
-     assingRole === "admin" ? Role.ADMIN :
-     Role.USER;
+  //  const role: Role =
+  //    assingRole === "user" ? Role.USER :
+  //    assingRole === "vendor" ? Role.VENDOR :
+  //    assingRole === "admin" ? Role.ADMIN :
+  //    Role.USER;
    
+     console.log(role)
 
   return (
 
@@ -29,7 +26,7 @@ const ForgotPasswordPage = () => {
     initialValues={{email: ""}}
     validationSchema={ForgotValidationSchema}
     onSubmit={(values)=> 
-      mutate(values.email,{
+      mutate({email:values.email, role},{
         onSuccess: (data)=>{
           toast.success(data?.message || SUCCESS_MESSAGES.RESET_LINK_SEND)
         },

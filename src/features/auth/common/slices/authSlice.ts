@@ -6,11 +6,11 @@ const getSavedState = () => {
   const path = window.location.pathname;
 
   let isWho: "admin" | "user" | "vendor" | null = null;
-
   if (path.startsWith("/admin") || path.startsWith("/auth/admin")) isWho = "admin";
-  else if (path.startsWith("/user") || path.startsWith("/auth/user") || path.startsWith("/")) isWho = "user";
+  else if (path.startsWith("/user") || path.startsWith("/auth/user") || (path.startsWith("/") && !path.startsWith("/auth") && !path.startsWith("/vendor"))) isWho = "user";
   else if (path.startsWith("/vendor") || path.startsWith("/auth/vendor")) isWho = "vendor";
-
+  console.log(path)
+  
   const admin = localStorage.getItem("adminAuth");
   const user = localStorage.getItem("userAuth");
   const vendor = localStorage.getItem("vendorAuth");

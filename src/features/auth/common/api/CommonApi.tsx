@@ -25,9 +25,9 @@ export const useLogoutApi = () => {
 
 export const useVerifyForgotPassword = () => {
   return useMutation({
-    mutationFn: async (email: string) => {
+    mutationFn: async (data: { email: string; role: string }) => {
       const response = await AxiosInstance.post("/auth/forgot-password", {
-        email,
+        data,
       });
       return response.data;
     },
