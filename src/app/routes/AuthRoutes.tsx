@@ -4,6 +4,9 @@ import type { RouteObject } from "react-router-dom";
 import AuthProtectorRoute from "./protector/AuthProtectorRoute";
 import AdminLoginPage from "@/features/auth/admin/pages/AdminLoginPage";
 import VendorLoginPage from "@/features/auth/vendor/pages/VendorLoginPage";
+import ForgotPasswordPage from "@/features/auth/common/Pages/ForgotPasswordPage";
+import ResetPasswordPage from "@/features/auth/common/Pages/ResetPasswordPage";
+import ForgotVerifyPage from "@/features/auth/common/Pages/ForgotVerifyPage";
 
 const UserLoginpage = lazy(
   () => import("@/features/auth/user/pages/UserLoginPage")
@@ -72,6 +75,31 @@ export const AuthRoutes: RouteObject[] = [
         element:(
           <AuthProtectorRoute>
             <AdminLoginPage/>
+          </AuthProtectorRoute>
+        )
+      },
+      {
+        path: "auth/forgot-password",
+        element:(
+          <AuthProtectorRoute>
+            <ForgotPasswordPage/>
+          </AuthProtectorRoute>
+        )
+      },
+      
+      {
+        path: "auth/forgot-password/verify",
+        element:(
+          <AuthProtectorRoute>
+            <ForgotVerifyPage/>
+          </AuthProtectorRoute>
+        )
+      },
+       {
+        path: "auth/reset-password",
+        element:(
+          <AuthProtectorRoute>
+            <ResetPasswordPage/>
           </AuthProtectorRoute>
         )
       },

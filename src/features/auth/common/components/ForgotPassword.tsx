@@ -1,14 +1,12 @@
-
 "use client";
 
 import React from "react";
 import { Form, Field, ErrorMessage } from "formik";
 import { motion } from "framer-motion";
 import type { LoginFormProps, FloatingInputProps } from "../../types/form.types";
-import { FcGoogle } from "react-icons/fc";
-import { Link } from "react-router-dom";
 
-const LoginForm: React.FC<LoginFormProps> = ({ type }) => {
+
+const LoginForm: React.FC<LoginFormProps> = () => {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -24,20 +22,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ type }) => {
         className="text-center mb-4"
       >
         <h1 className="text-xl font-bold text-gray-900 mb-1">
-          Welcome to <span className="text-blue-600">ShelfShare</span>
+          Verify <span className="text-blue-600">ShelfShare</span> Account
         </h1>
       </motion.div>
 
-      {/* GOOGLE ICON — centered above form */}
-      <motion.button
-        type="button"
-        whileHover={{ scale: 1.15, rotate: 8 }}
-        whileTap={{ scale: 0.9 }}
-        onClick={() => console.log("Google Login Triggered")}
-        className="flex items-center justify-center w-11 h-11 rounded-full border border-gray-300 hover:bg-gray-100 mb-3"
-      >
-        <FcGoogle size={24} />
-      </motion.button>
 
       {/* Center Form */}
       <motion.div
@@ -48,36 +36,14 @@ const LoginForm: React.FC<LoginFormProps> = ({ type }) => {
       >
         <Form className="space-y-3 w-72">
           <AnimatedField name="email" type="email" label="Email Address" />
-          <AnimatedField name="password" type="password" label="Password" />
-
-          {/* Signup + Forgot Password Row — reduced space */}
- <div className="flex justify-center gap-40 text-[10px] text-gray-500 font-medium -mt-2">
-              <Link
-              // to={`/auth/${type}/forgot-password`}
-              to={`/auth/forgot-password`}
-              className="hover:text-blue-600 hover:underline"
-            >
-              Forgot Password?
-            </Link>
-            <Link
-              to={`/auth/${type}/register`}
-              className="hover:text-blue-600 hover:underline"
-            >
-              Signup
-            </Link>
-
-          
-          </div>
-
-
-          {/* LOGIN BUTTON */}
+          {/* Verify BUTTON */}
           <motion.button
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
             type="submit"
             className="w-72 bg-blue-600 text-white py-2.5 rounded-lg text-sm font-medium hover:bg-blue-700 mx-auto block capitalize"
           >
-            {type} Login
+             Verify
           </motion.button>
         </Form>
       </motion.div>

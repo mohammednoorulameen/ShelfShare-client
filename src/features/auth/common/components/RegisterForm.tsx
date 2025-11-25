@@ -108,7 +108,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ type, onFileChange }) => {
             <div className="flex justify-between mt-1 text-xs">
               <p className="text-gray-500">Photo (optional)</p>
               <Link
-                to="/auth/user/login"
+                to={`/auth/${type}/login`}
                 className="text-blue-600 hover:underline font-medium"
               >
                 Already have an account?
