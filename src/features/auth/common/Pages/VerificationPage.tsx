@@ -18,7 +18,7 @@ const VerificationPage = () => {
         console.log('first',role)
         const redirectPath = redirectByRoleLogin(role)
         navigate(redirectPath, {replace:true})
-      },2000)
+      },3000)
 
       return ()=> clearTimeout(timer)
     }

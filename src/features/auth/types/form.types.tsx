@@ -57,6 +57,7 @@ export interface FloatingInputProps {
 export interface RegisterFormProps {
   type: "user" | "vendor";
   onFileChange: (file: File | null) => void;
+   fileInputRef: React.RefObject<HTMLInputElement | null >;
 
 }
 

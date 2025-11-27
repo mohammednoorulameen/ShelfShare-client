@@ -10,7 +10,7 @@ import type {
 // import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
 
-const RegisterForm: React.FC<RegisterFormProps> = ({ type, onFileChange }) => {
+const RegisterForm: React.FC<RegisterFormProps> = ({ type, onFileChange,fileInputRef }) => {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -101,6 +101,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ type, onFileChange }) => {
             <input
               type="file"
               accept="image/*"
+              ref={fileInputRef} 
               onChange={(e) => onFileChange(e.target.files?.[0] || null)}
               className="block w-full border border-gray-300 rounded-md file:px-3 file:py-1.5 text-sm"
             />
