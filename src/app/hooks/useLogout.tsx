@@ -23,6 +23,10 @@ const useLogout = () => {
         const redirectPath = redirectByRoleLogin(currentRole ?? Role.USER);
         navigate(redirectPath, { replace: true });
       },
+    //    onError: () => {
+    //   dispatch(logout());
+    //   navigate("/auth/user/login", { replace: true });
+    // }
     });
   };
   return handleLogout;

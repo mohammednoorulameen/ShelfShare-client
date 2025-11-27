@@ -7,10 +7,10 @@ import type {
   FloatingInputProps,
   RegisterFormProps,
 } from "../../types/form.types";
-import { FcGoogle } from "react-icons/fc";
+// import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
 
-const RegisterForm: React.FC<RegisterFormProps> = ({ type, onFileChange }) => {
+const RegisterForm: React.FC<RegisterFormProps> = ({ type, onFileChange,fileInputRef }) => {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -31,7 +31,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ type, onFileChange }) => {
       </motion.div>
 
       {/* GOOGLE AUTH BUTTON — moved to top */}
-      <motion.button
+     {/* { type === 'user' && <motion.button
         type="button"
         whileHover={{ scale: 1.15, rotate: 8 }}
         whileTap={{ scale: 0.9 }}
@@ -40,7 +40,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ type, onFileChange }) => {
       >
         <FcGoogle size={22} />
       </motion.button>
-
+} */}
       {/* CENTERED FORM */}
       <motion.div
         initial={{ y: 25, opacity: 0 }}
@@ -101,6 +101,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ type, onFileChange }) => {
             <input
               type="file"
               accept="image/*"
+              ref={fileInputRef} 
               onChange={(e) => onFileChange(e.target.files?.[0] || null)}
               className="block w-full border border-gray-300 rounded-md file:px-3 file:py-1.5 text-sm"
             />

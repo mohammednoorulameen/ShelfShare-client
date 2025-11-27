@@ -8,9 +8,11 @@ import { imageUploadCloudinery } from "@/app/utils/imageUploadCloudinery";
 import toast from "react-hot-toast";
 import type { AxiosError } from "axios";
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "@/app/constants/messages";
+import { useRef } from "react";
 
 const UserRegisterPage = () => {
   const userRegisterMutation = useUserRegisterMutation();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const initialValues: IUserRegisterForm = {
     userName: "",
@@ -21,7 +23,7 @@ const UserRegisterPage = () => {
     referralCode: "",
     imageKey: null,
   };
-  const handleSubmit = async (values: IUserRegisterForm) => {
+  const handleSubmit = async (values: IUserRegisterForm, resetForm: () => void) => {
     let imageUrl = "";
 
     if (values.imageKey) {
@@ -41,6 +43,10 @@ const UserRegisterPage = () => {
     userRegisterMutation.mutate(payload, {
       onSuccess: (data) => {
         toast.success(SUCCESS_MESSAGES.REGISTER_SUCCESS);
+        resetForm()
+        if(fileInputRef.current){
+          fileInputRef.current.value = ""
+        }
         console.log("register success", data);
       },
 
@@ -60,11 +66,12 @@ const UserRegisterPage = () => {
       <Formik
         initialValues={initialValues}
         validationSchema={UserRegisterValidationSchema}
-        onSubmit={handleSubmit}
+        onSubmit={(values,{resetForm})=> handleSubmit(values, resetForm)}
       >
         {({ setFieldValue }) => (
           <RegisterForm
             type="user"
+            fileInputRef={fileInputRef} 
             onFileChange={(file) => setFieldValue("imageKey", file)}
           />
         )}

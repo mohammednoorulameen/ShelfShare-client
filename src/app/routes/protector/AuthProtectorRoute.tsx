@@ -8,7 +8,6 @@ const AuthProtectorRoute = ({ children }: { children: ReactNode }) => {
   const isAuthenticated = useAppSelector((state) => state.auth);
   console.log(isAuthenticated)
   if (isAuthenticated.isAuthenticated) {
-    console.log("hello");
     if (isAuthenticated.role === Role.USER) {
       return <Navigate to="/user" replace />;
     }

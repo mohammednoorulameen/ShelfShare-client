@@ -7,6 +7,7 @@ import VendorLoginPage from "@/features/auth/vendor/pages/VendorLoginPage";
 import ForgotPasswordPage from "@/features/auth/common/Pages/ForgotPasswordPage";
 import ResetPasswordPage from "@/features/auth/common/Pages/ResetPasswordPage";
 import ForgotVerifyPage from "@/features/auth/common/Pages/ForgotVerifyPage";
+import { Role } from "@/types/role.enum";
 
 const UserLoginpage = lazy(
   () => import("@/features/auth/user/pages/UserLoginPage")
@@ -79,10 +80,18 @@ export const AuthRoutes: RouteObject[] = [
         )
       },
       {
-        path: "auth/forgot-password",
+        path: "auth/vendor/forgot-password",
         element:(
           <AuthProtectorRoute>
-            <ForgotPasswordPage/>
+            <ForgotPasswordPage role= {Role.VENDOR}/>
+          </AuthProtectorRoute>
+        )
+      },
+       {
+        path: "auth/user/forgot-password",
+        element:(
+          <AuthProtectorRoute>
+            <ForgotPasswordPage role= {Role.USER}/>
           </AuthProtectorRoute>
         )
       },

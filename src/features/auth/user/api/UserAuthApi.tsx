@@ -20,3 +20,15 @@ export const useUserLoginMutation = ()=>{
         }
     })
 }
+
+export const useGoogleLoginMutation = ()=> {
+    return useMutation({
+        mutationFn:async(idToken: string)=>{
+            const response  = await AxiosInstance.post('/auth/google',{idToken}, {
+          withCredentials: true, 
+        })
+          return response.data;
+        },
+        
+    })
+}

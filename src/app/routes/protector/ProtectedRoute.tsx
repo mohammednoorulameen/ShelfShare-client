@@ -11,7 +11,7 @@ const ProtectedRoute = ({
   allowedRoles: Role[];
 }) => {
   const isAuthenticated = useAppSelector((state) => state.auth);
-
+  console.log(isAuthenticated)
   if (!isAuthenticated.isAuthenticated) {
       const target = allowedRoles[0].toLowerCase();
       return <Navigate to={`/auth/${target}/login`} replace />;

@@ -1,14 +1,17 @@
-
 "use client";
 
 import React from "react";
 import { Form, Field, ErrorMessage } from "formik";
 import { motion } from "framer-motion";
-import type { LoginFormProps, FloatingInputProps } from "../../types/form.types";
-import { FcGoogle } from "react-icons/fc";
+import type {
+  LoginFormProps,
+  FloatingInputProps,
+} from "../../types/form.types";
+// import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
+import { GoogleLogin } from "@react-oauth/google";
 
-const LoginForm: React.FC<LoginFormProps> = ({ type }) => {
+const LoginForm: React.FC<LoginFormProps> = ({ type, googleLogin }) => {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -29,15 +32,28 @@ const LoginForm: React.FC<LoginFormProps> = ({ type }) => {
       </motion.div>
 
       {/* GOOGLE ICON — centered above form */}
-      <motion.button
-        type="button"
-        whileHover={{ scale: 1.15, rotate: 8 }}
-        whileTap={{ scale: 0.9 }}
-        onClick={() => console.log("Google Login Triggered")}
-        className="flex items-center justify-center w-11 h-11 rounded-full border border-gray-300 hover:bg-gray-100 mb-3"
-      >
-        <FcGoogle size={24} />
-      </motion.button>
+      {type === "user" && (
+        <motion.button
+          type="button"
+          whileHover={{ scale: 1.15, rotate: 8 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={() => console.log("Google Login Triggered")}
+          // className="flex items-center justify-center w-11 h-11 rounded-full border border-gray-300 hover:bg-gray-100 mb-3"
+          className="flex items-center justify-center w-11 h-11  border-gray-300 hover:bg-gray-100 mb-3"
+        >
+          {/* <FcGoogle size={24} /> */}
+
+          <GoogleLogin
+            onSuccess={(credentialResponse) => {
+              const idToken = credentialResponse.credential;
+              if (idToken && googleLogin) {
+                googleLogin(idToken);
+              }
+            }}
+            onError={() => console.log("Google Login Failed")}
+          />
+        </motion.button>
+      )}
 
       {/* Center Form */}
       <motion.div
@@ -51,10 +67,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ type }) => {
           <AnimatedField name="password" type="password" label="Password" />
 
           {/* Signup + Forgot Password Row — reduced space */}
- <div className="flex justify-center gap-40 text-[10px] text-gray-500 font-medium -mt-2">
-              <Link
-              // to={`/auth/${type}/forgot-password`}
-              to={`/auth/forgot-password`}
+          <div className="flex justify-center gap-40 text-[10px] text-gray-500 font-medium -mt-2">
+            <Link
+              to={`/auth/${type}/forgot-password`}
+              // to={`/auth/forgot-password`}
               className="hover:text-blue-600 hover:underline"
             >
               Forgot Password?
@@ -65,10 +81,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ type }) => {
             >
               Signup
             </Link>
-
-          
           </div>
-
 
           {/* LOGIN BUTTON */}
           <motion.button
@@ -86,7 +99,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ type }) => {
 };
 
 export default LoginForm;
-
 
 /* -----------------------------------
   Floating input
@@ -128,5 +140,3 @@ const AnimatedField: React.FC<FloatingInputProps> = ({
     />
   </motion.div>
 );
-
-
