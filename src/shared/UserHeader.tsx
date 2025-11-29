@@ -29,27 +29,16 @@ const UserHeader: React.FC = () => {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-
-  /**-------
-    handle menu actions 
-   -----------------*/
+  /**--------------
+   * Handle Dropdown Click
+  ----------------*/
   const handleMenuClick = (action: string) => {
-    switch (action) {
-      case "profile":
-        navigate("/profile");
-        break;
-      case "orders":
-        navigate("/orders")
-        break;
-      case "wishlist":
-        navigate("/wishlist");
-        break;
-      case "logout":
-         handleLogout()
-        break;
-      default:
-        break;
+    if (action === "logout") {
+      handleLogout();
+      return;
     }
+
+    navigate(action);
   };
 
   return (
@@ -174,10 +163,13 @@ const UserHeader: React.FC = () => {
           </div>
 
           {/* DESKTOP Become Seller */}
-          <div className="hidden lg:flex items-center gap-1 cursor-pointer hover:opacity-80">
+          <div className="hidden lg:flex items-center gap-1 cursor-pointer hover:opacity-80"
+          onClick={()=> navigate('/auth/vendor/login')}
+          >
             <Store className="w-5 h-5 text-gray-700" />
             <span className="text-sm font-medium">Become Seller</span>
           </div>
+          <button onClick={()=> navigate('/vendor')}>clcik</button>
         </nav>
       </div>
     </header>

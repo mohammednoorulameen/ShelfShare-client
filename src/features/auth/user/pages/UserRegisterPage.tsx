@@ -24,10 +24,10 @@ const UserRegisterPage = () => {
     imageKey: null,
   };
   const handleSubmit = async (values: IUserRegisterForm, resetForm: () => void) => {
-    let imageUrl = "";
+    let imagekey = "";
 
     if (values.imageKey) {
-      imageUrl = await imageUploadCloudinery(values.imageKey as File);
+      imagekey = await imageUploadCloudinery(values.imageKey as File);
     }
     const payload = {
       userName: values.userName,
@@ -37,7 +37,7 @@ const UserRegisterPage = () => {
       confirmPassword: values.confirmPassword,
       referralCode: values.referralCode || "",
       role: "user",
-      imageKey: imageUrl,
+      imageKey: imagekey,
     };
 
     userRegisterMutation.mutate(payload, {
