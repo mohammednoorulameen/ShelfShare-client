@@ -30,6 +30,10 @@ const UserLoginPage = () => {
             email: user.email,
             role: user.role,
             userId: user.userId,
+            userName: user.userName,
+            phoneNumber: user.phoneNumber,
+            imagekey: user.imagekey,
+            isEmailVerified: user.isEmailVerified,
           })
         );
 
@@ -62,6 +66,10 @@ const UserLoginPage = () => {
                   email: user.email,
                   role: user.role,
                   userId: user.userId,
+                  userName: user.userName,
+                  phoneNumber: user.phoneNumber,
+                  imagekey: user.imagekey,
+                  isEmailVerified: user.isEmailVerified,
                   // vendorId: user.vendorId,
                 })
               );

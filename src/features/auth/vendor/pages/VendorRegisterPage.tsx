@@ -7,11 +7,14 @@ import { useVendorRegisterMutation } from "../api/VentorAuthApi";
 import toast from "react-hot-toast";
 import type { AxiosError } from "axios";
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "@/app/constants/messages";
+import { useRef } from "react";
 
 
 const VendorRegisterPage = () => {
 
   const vendorRegisterMutation = useVendorRegisterMutation();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
 
   const initialValues: IVendorRegisterForm = {
     bussinessName: "",
@@ -23,10 +26,10 @@ const VendorRegisterPage = () => {
   };
 
   const handleSubmit  =async (values : IVendorRegisterForm) =>{
-    let imageUrl = "";
+    let imagekey = "";
     
       if (values.imageKey) {
-        imageUrl = await imageUploadCloudinery(values.imageKey as File);
+        imagekey = await imageUploadCloudinery(values.imageKey as File);
       }
 
     const payload  = {
@@ -36,7 +39,7 @@ const VendorRegisterPage = () => {
     password: values.password,
     confirmPassword: values.confirmPassword,
     role:"vendor",
-    imageKey: imageUrl,
+    imageKey: imagekey,
     }
 
     vendorRegisterMutation.mutate(payload, {
@@ -63,6 +66,7 @@ const VendorRegisterPage = () => {
         <RegisterForm
           type="vendor"
           onFileChange={(file) => setFieldValue("imageKey", file)}
+           fileInputRef={fileInputRef} 
         />
       )}
     </Formik>
