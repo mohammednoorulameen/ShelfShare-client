@@ -21,7 +21,7 @@ export const AdminRoutes: RouteObject[] = [
         path: "",
         element: (
           <ProtectedRoute allowedRoles={[Role.ADMIN]}>
-            <Greeting/>
+            <Greeting role={'Admin'}/>
          </ProtectedRoute>
         ),
       },
