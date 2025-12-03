@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import type { PersonalInfoFormikProps } from "../../types/PersonalInfo";
+import type { PersonalInfoFormikProps } from "../../types/PersonalInfo.types";
 
 type Props = PersonalInfoFormikProps & {
   onCancel?: () => void;

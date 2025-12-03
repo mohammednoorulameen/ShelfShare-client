@@ -1,5 +1,5 @@
 import AccountDashboard from '../components/AccountDashboard'
-import { useGetUser } from '../api/userAccountApi';
+import { useGetUser } from '../api/userPersonalInfoApi';
 
 const AccountDashboardPage = () => {
      const { data: user } = useGetUser();
