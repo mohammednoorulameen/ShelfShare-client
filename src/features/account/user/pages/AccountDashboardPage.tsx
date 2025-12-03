@@ -1,9 +1,9 @@
-import React from 'react'
 import AccountDashboard from '../components/AccountDashboard'
-import { useAppSelector } from '@/app/hooks/useRedux'
+import { useGetUser } from '../api/userAccountApi';
 
 const AccountDashboardPage = () => {
-    const user = useAppSelector((state)=> state.auth)
+     const { data: user } = useGetUser();
+
   return (
     <div>
         <AccountDashboard user={user} />

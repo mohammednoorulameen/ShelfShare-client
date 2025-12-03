@@ -8,8 +8,7 @@ import type { PersonalInfoProps } from "../../types/PersonalInfo";
 
 const AccountDashboard: FC<PersonalInfoProps> = ({ user }) => {
   const [activeTab, setActiveTab] = useState("personalinfo");
-  const DEFAULT_AVATAR =
-    "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+  const DEFAULT_AVATAR = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
   // Switch Case - Render content based on active tab
   const renderTabContent = () => {
@@ -60,7 +59,7 @@ const AccountDashboard: FC<PersonalInfoProps> = ({ user }) => {
 
               <div className="relative">
                 <img
-                  src={user.imagekey || DEFAULT_AVATAR}
+                  src={user?.imageKey || DEFAULT_AVATAR}
                   alt="Profile"
                   className="w-16 h-16 sm:w-24 sm:h-24 rounded-full object-cover"
                 />
@@ -73,16 +72,16 @@ const AccountDashboard: FC<PersonalInfoProps> = ({ user }) => {
               {/* TEXT */}
               <div className="text-center sm:text-left">
                 <h2 className="text-lg sm:text-2xl font-bold mb-1">
-                  {user.userName}
+                  {user?.userName}
                 </h2>
 
                 <div className="flex items-center justify-center sm:justify-start gap-2 text-green-600 text-xs sm:text-sm font-semibold mb-2">
                   <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4" />
-                  {user.isEmailVerified ? "Verified" : "not Verified"}
+                  {user?.isEmailVerified ? "Verified" : "not Verified"}
                 </div>
 
                 <p className="text-gray-600 text-sm sm:text-base">
-                  {user.email}
+                  {user?.email}
                 </p>
               </div>
             </div>
