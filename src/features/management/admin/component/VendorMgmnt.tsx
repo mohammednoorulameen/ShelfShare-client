@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
   Search,
@@ -15,7 +16,6 @@ import type { VendorMgmntProps, Vendor } from "../../types/responseVendor.types"
 /*------
   Vendor status checking
  -----------------------*/
-
 
 const getVendorStatus = (vendor: Vendor) => {
   if (!vendor.isEmailVerified)
@@ -38,7 +38,8 @@ const VendorMgmnt: React.FC<VendorMgmntProps> = ({
   isLoading,
   isError,
   onToggleBlock,
-  onToggleVerify
+  onToggleVerify,
+  // onReject, // new prop
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -57,6 +58,15 @@ const VendorMgmnt: React.FC<VendorMgmntProps> = ({
         Failed to fetch vendors
       </p>
     );
+
+  // const handleReject = (vendorId: string) => {
+  //   const reason = window.prompt("Please enter rejection reason (required):");
+  //   if (!reason || !reason.trim()) {
+  //     return;
+  //   }
+
+  //   onReject?.(vendorId, reason.trim());
+  // };
 
   return (
     <div className="space-y-5">
@@ -179,31 +189,59 @@ const VendorMgmnt: React.FC<VendorMgmntProps> = ({
 
                     <td className="px-5 py-3 text-right">
                       <div className="flex items-center justify-end gap-2">
-                        {type !== "verified" && (
-                          
-                          <button
-                          onClick={() => onToggleVerify(vendor._id as string)}
-                           className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium text-white bg-green-500 rounded-md hover:bg-green-600 transition shadow-sm">
-                            <ShieldCheck className="w-3.5 h-3.5" />
-                            Verify
-                          </button>
-                        )}
+                        {/* NEW LOGIC: 
+                            - If not admin verified -> show Verify + Reject
+                            - If admin verified -> show Block/Unblock (existing behavior)
+                        */}
 
-                        {type !== "blocked" ? (
-                          <button 
-                          onClick={() => onToggleBlock(vendor._id)}
-                          className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium text-red-600 bg-white border border-red-200 rounded-md hover:bg-red-50 transition shadow-sm">
-                            <ShieldAlert className="w-3.5 h-3.5" />
-                            Block
-                          </button>
-                        ) : (
-                          <button
-                          onClick={() => onToggleBlock(vendor._id)}
-                           className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium text-slate-600 bg-white border border-slate-200 rounded-md hover:bg-slate-50 transition shadow-sm">
-                            <Shield className="w-3.5 h-3.5" />
-                            Unblock
-                          </button>
-                        )}
+
+                          <>
+                {!vendor.isAdminVerified ? (
+                            <button
+                              onClick={() => onToggleVerify(vendor._id as string)}
+                              className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium text-white bg-green-500 rounded-md hover:bg-green-600 transition shadow-sm"
+                            >
+                              <ShieldCheck className="w-3.5 h-3.5" />
+                              Verify
+                            </button>
+                             ):(
+
+                            <button
+                              onClick={() => onToggleVerify(vendor._id as string)}
+                              className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium text-red-600 bg-white border border-red-200 rounded-md hover:bg-red-50 transition shadow-sm"
+                            >
+                              <XCircle className="w-3.5 h-3.5" />
+                              Reject
+                            </button>
+                          )}
+                          </>
+                        
+                            <>
+                            {vendor.status !== "blocked" ? (
+                              <button
+                                onClick={() => onToggleBlock(vendor._id)}
+                                className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium text-red-600 bg-white border border-red-200 rounded-md hover:bg-red-50 transition shadow-sm"
+                              >
+                                <ShieldAlert className="w-3.5 h-3.5" />
+                                Block
+                              </button>
+                            ) : (
+                              <button
+                                onClick={() => onToggleBlock(vendor._id)}
+                                className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium text-slate-600 bg-white border border-slate-200 rounded-md hover:bg-slate-50 transition shadow-sm"
+                              >
+                                <Shield className="w-3.5 h-3.5" />
+                                Unblock
+                              </button>
+                            )}
+                          </>
+
+
+
+
+
+
+
                       </div>
                     </td>
                   </tr>
@@ -243,3 +281,23 @@ const VendorMgmnt: React.FC<VendorMgmntProps> = ({
 };
 
 export default VendorMgmnt;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

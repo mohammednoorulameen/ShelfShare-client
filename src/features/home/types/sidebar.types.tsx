@@ -19,4 +19,5 @@ export interface SidebarLayoutProps {
   onLogout: () => void;
   title: string;
   logo?: React.ReactNode;
+   disabled?: boolean;
 }
