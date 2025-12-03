@@ -3,6 +3,7 @@
 export const SUCCESS_MESSAGES = {
   LOGIN_SUCCESS: "Login successful!",
   REGISTER_SUCCESS: "Verify Your Email!",
+  PASSWORD_UPDATE_SUCCESS : "Password updated successfully!",
 
   LOGOUT_SUCCESS: "Logged out successfully!",
   RESET_LINK_SEND: "Send Reset From",

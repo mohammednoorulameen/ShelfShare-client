@@ -3,7 +3,7 @@ import { Formik } from "formik";
 import { PersonalInfoValidationSchema } from "../../Validation/Form.Validations";
 import PersonalInfo from "../components/PersonalInfo";
 import { toast } from "react-hot-toast";
-import { useGetUser, useUpdateUserInfo } from "../api/userAccountApi";
+import { useGetUser, useUpdateUserInfo } from "../api/userPersonalInfoApi";
 import { ERROR_MESSAGES } from "@/app/constants/messages";
 import { isAxiosError } from "axios";
 import { imageUploadCloudinery } from "@/app/utils/imageUploadCloudinery";

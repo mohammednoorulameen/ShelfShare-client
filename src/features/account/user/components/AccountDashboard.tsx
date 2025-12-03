@@ -2,9 +2,9 @@ import { Account_Dashboard_Tabs } from "@/app/constants/Icons";
 import { Moon, Trash2, CheckCircle } from "lucide-react";
 import { useState, type FC } from "react";
 import PersonalInfoPage from "../pages/PersonalInfoPage";
-import ChangePasswordPage from "../pages/ChangePasswordPage";
+import ChangePasswordPage from "../pages/UpdatePasswordPage";
 import { motion, AnimatePresence } from "framer-motion";
-import type { PersonalInfoProps } from "../../types/PersonalInfo";
+import type { PersonalInfoProps } from "../../types/PersonalInfo.types";
 
 const AccountDashboard: FC<PersonalInfoProps> = ({ user }) => {
   const [activeTab, setActiveTab] = useState("personalinfo");

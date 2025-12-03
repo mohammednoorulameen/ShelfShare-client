@@ -1,5 +1,5 @@
 import {  useMutation, useQuery } from "@tanstack/react-query";
-import type { IUpdateUserInfo, UserResponseDto } from "../../types/PersonalInfo";
+import type { IUpdateUserInfo, UserResponseDto } from "../../types/PersonalInfo.types";
 import { AxiosInstance } from "@/lib/axios/axios";
 
 
