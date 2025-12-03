@@ -3,6 +3,7 @@ import type { RouteObject } from "react-router-dom";
 import ProtectedRoute from "./protector/ProtectedRoute";
 import { Role } from "@/types/role.enum";
 import UserMgmntPage from "@/features/management/admin/pages/UserMgmntPage";
+import CategoryMgmntPage from "@/features/management/admin/pages/CategoryMgmntPage";
 const AdminLayout = lazy(() => import( "@/features/home/admin/adminLayout/AdminLayout"));
 const Greeting = lazy(() => import( "@/features/home/common/Greeting"));
 const AdminOverviewPage = lazy(() => import( "@/features/overview/admin/pages/AdminOverviewPage"));
@@ -46,6 +47,14 @@ export const AdminRoutes: RouteObject[] = [
         element: (
           <ProtectedRoute allowedRoles={[Role.ADMIN]}>
             <UserMgmntPage/>
+         </ProtectedRoute>
+        ),
+      },
+      {
+        path: "categorymanagement",
+        element: (
+          <ProtectedRoute allowedRoles={[Role.ADMIN]}>
+            <CategoryMgmntPage/>
          </ProtectedRoute>
         ),
       },

@@ -1,0 +1,49 @@
+import { AxiosInstance } from "@/lib/axios/axios";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import type {
+  CategoryResponse,
+  CreateCategoryPayload,
+} from "../../types/category.types";
+
+export const useCreateCategory = () => {
+  return useMutation({
+    mutationFn: async (payload: CreateCategoryPayload) => {
+      const response = await AxiosInstance.post(
+        "/admin/category/create-category",
+        payload,
+        { withCredentials: true }
+      );
+      return response.data;
+    },
+  });
+};
+
+export const useGetCategory = (page: number, limit: 10) => {
+  return useQuery({
+    queryKey: ["category", page, limit],
+    queryFn: async () => {
+      const response = await AxiosInstance.get<CategoryResponse>(
+        `/admin/category/get-category?page=${page}&limit=${limit}`,
+        { withCredentials: true }
+      );
+      console.log(response);
+      return response.data;
+    },
+    placeholderData: (prev) => prev,
+  });
+};
+
+
+
+export const useToggleCategoryStatus = () => {
+  return useMutation({
+    mutationFn: async (categoryId: string) => {
+      const response = await AxiosInstance.patch(
+        `/admin/category/toggle-status/${categoryId}`,
+        {},
+        { withCredentials: true }
+      );
+      return response.data;
+    },
+  });
+};

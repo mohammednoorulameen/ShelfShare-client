@@ -43,6 +43,3 @@ export const useBlockVentor = ()=>{
     })
 }
 
-// export const useRejectVendor = ()=>{
-
-// }
