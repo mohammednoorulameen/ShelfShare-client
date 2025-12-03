@@ -22,7 +22,7 @@ export const VendorRoutes: RouteObject[] = [
        {
         path: "",
         element: (
-          <ProtectedRoute allowedRoles={[Role.ADMIN]}>
+          <ProtectedRoute allowedRoles={[Role.VENDOR]}>
             <Greeting role={'Vendor'}/>
          </ProtectedRoute>
         ),
@@ -30,7 +30,7 @@ export const VendorRoutes: RouteObject[] = [
       {
         path: "overview",
         element: (
-          <ProtectedRoute allowedRoles={[Role.ADMIN]}>
+          <ProtectedRoute allowedRoles={[Role.VENDOR]}>
             <VendorOverviewPage/>
          </ProtectedRoute>
         ),

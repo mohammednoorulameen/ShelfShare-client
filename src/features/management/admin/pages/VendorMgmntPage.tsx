@@ -8,6 +8,7 @@ const VendorMgmntPage = () => {
   const { data, isLoading, isError } = useGetVentors(page,10);
   const adminVerifyVendor = useVerifyVentor()
   const adminBlockVendor = useBlockVentor()
+  // const adminRejectVendor = useRejectVendor(); 
 
   const vendors : Vendor[] = data?.data ?? [];
   console.log('data', data)
@@ -22,6 +23,9 @@ const VendorMgmntPage = () => {
         isError = {isError}
         onToggleVerify ={adminVerifyVendor.mutate}
         onToggleBlock ={adminBlockVendor.mutate}
+        // onReject={(vendorId, reason) =>
+        //   adminRejectVendor.mutate({ vendorId, reason })
+        // }
         />
     </div>
   )

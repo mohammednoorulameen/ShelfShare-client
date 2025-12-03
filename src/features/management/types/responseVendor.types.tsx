@@ -40,6 +40,7 @@ export interface VendorMgmntProps{
   isError : boolean;
   onToggleBlock:(vendorId: string)=> void
   onToggleVerify:(vendorId: string)=> void
+  onReject?: (vendorId: string, reason: string) => void;
 }
 
 
