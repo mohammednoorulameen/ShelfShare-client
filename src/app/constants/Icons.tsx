@@ -13,6 +13,7 @@ import {
   BookOpen,
   Calendar,
   CreditCard,
+  Tags,
 } from "lucide-react";
 
 /*----------------
@@ -45,8 +46,9 @@ admin sidbar icons
 
 export const adminMenu = [
   { icon: LayoutDashboard, label: "Overview", path: "overview" },
-  { icon: Users, label: "Vendor Mgmt", path: "vendormanagement" },
-  { icon: Users, label: "User Mgmt", path: "usermanagement" },
+  { icon: Users, label: "Vendors ", path: "vendormanagement" },
+  { icon: Users, label: "Users ", path: "usermanagement" },
+  { icon: Tags, label: "Categories ", path: "categorymanagement" },
   { icon: BookOpen, label: "Books", path: "books" },
   { icon: Calendar, label: "Events", path: "events" },
   { icon: CreditCard, label: "Transactions", path: "transactions" },

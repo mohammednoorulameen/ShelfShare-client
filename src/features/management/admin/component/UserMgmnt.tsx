@@ -53,6 +53,7 @@ const UserMgmnt: React.FC<UserMgmntProps> = ({
         Failed to fetch vendors
       </p>
     );
+    
 
   return (
     <div className="space-y-5">
@@ -92,6 +93,9 @@ const UserMgmnt: React.FC<UserMgmntProps> = ({
             <thead>
               <tr className="bg-slate-50 border-b border-slate-200">
                 <th className="px-5 py-3 text-[10px] font-semibold text-slate-500 uppercase tracking-wide">
+                  SNo
+                </th>
+                <th className="px-5 py-3 text-[10px] font-semibold text-slate-500 uppercase tracking-wide">
                   User
                 </th>
                 <th className="px-5 py-3 text-[10px] font-semibold text-slate-500 uppercase tracking-wide">
@@ -107,7 +111,8 @@ const UserMgmnt: React.FC<UserMgmntProps> = ({
             </thead>
 
             <tbody className="divide-y divide-slate-100">
-              {filteredVendors.map((user) => {
+              {filteredVendors.map((user,index) => {
+                 const serialNumber = (page - 1) * 10 + (index + 1);
                 const { label, type } = getVendorStatus(user);
 
                 const badgeClasses =
@@ -128,6 +133,10 @@ const UserMgmnt: React.FC<UserMgmntProps> = ({
 
                 return (
                   <tr key={user._id} className="hover:bg-slate-50 transition">
+                      <td className="px-5 py-3 text-sm font-medium text-slate-700">
+        {serialNumber}
+      </td>
+
                     <td className="px-5 py-3">
                       <div className="flex items-center gap-3">
                         <img

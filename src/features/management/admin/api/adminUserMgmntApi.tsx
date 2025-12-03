@@ -10,7 +10,7 @@ export const useGetUsers = (page: number, limit: 10) =>{
     return useQuery({
         queryKey : ['users', page, limit],
         queryFn : async ()=> {
-            const response = await AxiosInstance.get<UserListResponse>(`/admin/allusers?page=${page}$limit=${limit}`)
+            const response = await AxiosInstance.get<UserListResponse>(`/admin/allusers?page=${page}&limit=${limit}`)
             return response.data
         },
         placeholderData: (prev)=> prev
