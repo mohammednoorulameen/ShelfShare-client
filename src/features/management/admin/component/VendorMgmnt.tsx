@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   Search,
@@ -13,10 +12,9 @@ import {
 } from "lucide-react";
 import type { VendorMgmntProps, Vendor } from "../../types/responseVendor.types";
 
-/*------
-  Vendor status checking
- -----------------------*/
-
+/*---------------------------
+  Vendor Status Checking Logic
+----------------------------*/
 const getVendorStatus = (vendor: Vendor) => {
   if (!vendor.isEmailVerified)
     return { label: "Email not verified", type: "emailPending" };
@@ -25,7 +23,8 @@ const getVendorStatus = (vendor: Vendor) => {
 
   if (!vendor.isAdminVerified)
     return { label: "Pending admin approval", type: "pending" };
-  return { label: "verified", type: "verified" };
+
+  return { label: "Verified", type: "verified" };
 };
 
 const fallbackImg = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
@@ -39,9 +38,11 @@ const VendorMgmnt: React.FC<VendorMgmntProps> = ({
   isError,
   onToggleBlock,
   onToggleVerify,
-  // onReject, // new prop
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
+
+  // NEW — IMAGE PREVIEW STATE
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   const filteredVendors = vendors.filter(
     (vendor) =>
@@ -59,18 +60,9 @@ const VendorMgmnt: React.FC<VendorMgmntProps> = ({
       </p>
     );
 
-  // const handleReject = (vendorId: string) => {
-  //   const reason = window.prompt("Please enter rejection reason (required):");
-  //   if (!reason || !reason.trim()) {
-  //     return;
-  //   }
-
-  //   onReject?.(vendorId, reason.trim());
-  // };
-
   return (
     <div className="space-y-5">
-      {/* Header */}
+      {/* HEADER */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <div>
           <h2 className="text-xl font-semibold text-slate-800">
@@ -89,7 +81,8 @@ const VendorMgmnt: React.FC<VendorMgmntProps> = ({
               placeholder="Search vendor..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-md text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm"
+              className="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-md text-xs 
+              focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
             />
           </div>
 
@@ -99,24 +92,16 @@ const VendorMgmnt: React.FC<VendorMgmntProps> = ({
         </div>
       </div>
 
-      {/* Vendors Table */}
+      {/* VENDORS TABLE */}
       <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-200">
-                <th className="px-5 py-3 text-[10px] font-semibold text-slate-500 uppercase tracking-wide">
-                  Vendor
-                </th>
-                <th className="px-5 py-3 text-[10px] font-semibold text-slate-500 uppercase tracking-wide">
-                  Contact
-                </th>
-                <th className="px-5 py-3 text-[10px] font-semibold text-slate-500 uppercase tracking-wide">
-                  Status
-                </th>
-                <th className="px-5 py-3 text-[10px] font-semibold text-slate-500 uppercase tracking-wide text-right">
-                  Actions
-                </th>
+                <th className="table-head">Vendor</th>
+                <th className="table-head">Contact</th>
+                <th className="table-head">Status</th>
+                <th className="table-head text-right">Actions</th>
               </tr>
             </thead>
 
@@ -142,12 +127,18 @@ const VendorMgmnt: React.FC<VendorMgmntProps> = ({
 
                 return (
                   <tr key={vendor._id} className="hover:bg-slate-50 transition">
+                    {/* VENDOR INFO */}
                     <td className="px-5 py-3">
                       <div className="flex items-center gap-3">
+                        {/* CLICKABLE IMAGE */}
                         <img
                           src={vendor.imageKey || fallbackImg}
                           alt={vendor.bussinessName}
-                          className="w-9 h-9 rounded-full object-cover border border-slate-100"
+                          onClick={() =>
+                            setPreviewImage(vendor.imageKey || fallbackImg)
+                          }
+                          className="w-10 h-10 rounded-full object-cover border cursor-pointer 
+                          hover:opacity-80 transition"
                         />
 
                         <div>
@@ -157,7 +148,6 @@ const VendorMgmnt: React.FC<VendorMgmntProps> = ({
                               <CheckCircle className="w-3.5 h-3.5 text-green-500" />
                             )}
                           </p>
-
                           <p className="text-[11px] text-slate-500">
                             {vendor.vendorId}
                           </p>
@@ -165,6 +155,7 @@ const VendorMgmnt: React.FC<VendorMgmntProps> = ({
                       </div>
                     </td>
 
+                    {/* CONTACT */}
                     <td className="px-5 py-3">
                       <div className="flex flex-col gap-1">
                         <div className="flex items-center gap-1.5 text-xs text-slate-600">
@@ -178,70 +169,64 @@ const VendorMgmnt: React.FC<VendorMgmntProps> = ({
                       </div>
                     </td>
 
+                    {/* STATUS */}
                     <td className="px-5 py-3">
                       <span
-                        className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium capitalize border ${badgeClasses}`}
+                        className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] 
+                        font-medium border ${badgeClasses}`}
                       >
                         <Icon className="w-3 h-3 mr-1" />
                         {label}
                       </span>
                     </td>
 
+                    {/* ACTION BUTTONS */}
                     <td className="px-5 py-3 text-right">
                       <div className="flex items-center justify-end gap-2">
-                        {/* NEW LOGIC: 
-                            - If not admin verified -> show Verify + Reject
-                            - If admin verified -> show Block/Unblock (existing behavior)
-                        */}
+                        {/* VERIFY / REJECT */}
+                        {!vendor.isAdminVerified ? (
+                          <button
+                            onClick={() => onToggleVerify(vendor._id)}
+                            className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] 
+                            font-medium text-white bg-green-500 rounded-md hover:bg-green-600 shadow-sm"
+                          >
+                            <ShieldCheck className="w-3.5 h-3.5" />
+                            Verify
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => onToggleVerify(vendor._id)}
+                            className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] 
+                            font-medium text-red-600 bg-white border border-red-200 rounded-md 
+                            hover:bg-red-50 shadow-sm"
+                          >
+                            <XCircle className="w-3.5 h-3.5" />
+                            Reject
+                          </button>
+                        )}
 
-
-                          <>
-                {!vendor.isAdminVerified ? (
-                            <button
-                              onClick={() => onToggleVerify(vendor._id as string)}
-                              className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium text-white bg-green-500 rounded-md hover:bg-green-600 transition shadow-sm"
-                            >
-                              <ShieldCheck className="w-3.5 h-3.5" />
-                              Verify
-                            </button>
-                             ):(
-
-                            <button
-                              onClick={() => onToggleVerify(vendor._id as string)}
-                              className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium text-red-600 bg-white border border-red-200 rounded-md hover:bg-red-50 transition shadow-sm"
-                            >
-                              <XCircle className="w-3.5 h-3.5" />
-                              Reject
-                            </button>
-                          )}
-                          </>
-                        
-                            <>
-                            {vendor.status !== "blocked" ? (
-                              <button
-                                onClick={() => onToggleBlock(vendor._id)}
-                                className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium text-red-600 bg-white border border-red-200 rounded-md hover:bg-red-50 transition shadow-sm"
-                              >
-                                <ShieldAlert className="w-3.5 h-3.5" />
-                                Block
-                              </button>
-                            ) : (
-                              <button
-                                onClick={() => onToggleBlock(vendor._id)}
-                                className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium text-slate-600 bg-white border border-slate-200 rounded-md hover:bg-slate-50 transition shadow-sm"
-                              >
-                                <Shield className="w-3.5 h-3.5" />
-                                Unblock
-                              </button>
-                            )}
-                          </>
-
-
-
-
-
-
-
+                        {/* BLOCK / UNBLOCK */}
+                        {vendor.status !== "blocked" ? (
+                          <button
+                            onClick={() => onToggleBlock(vendor._id)}
+                            className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] 
+                            font-medium text-red-600 bg-white border border-red-200 rounded-md 
+                            hover:bg-red-50 shadow-sm"
+                          >
+                            <ShieldAlert className="w-3.5 h-3.5" />
+                            Block
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => onToggleBlock(vendor._id)}
+                            className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] 
+                            font-medium text-slate-600 bg-white border border-slate-200 rounded-md 
+                            hover:bg-slate-50 shadow-sm"
+                          >
+                            <Shield className="w-3.5 h-3.5" />
+                            Unblock
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -250,47 +235,65 @@ const VendorMgmnt: React.FC<VendorMgmntProps> = ({
             </tbody>
           </table>
 
-          {/* Pagination */}
-          <div className="flex justify-end gap-3 p-4">
-            <button
-              disabled={page === 1}
-              onClick={() => setPage((prev) => prev - 1)}
-              className="px-3 py-1 text-xs border rounded disabled:opacity-50"
-            >
-              Prev
-            </button>
-
-            <button
-              disabled={page === totalPages}
-              onClick={() => setPage((prev) => prev + 1)}
-              className="px-3 py-1 text-xs border rounded disabled:opacity-50"
-            >
-              Next
-            </button>
-          </div>
-
           {filteredVendors.length === 0 && (
             <div className="p-6 text-center text-sm text-slate-500">
               No vendors found.
             </div>
           )}
         </div>
+
+        {/* PAGINATION */}
+        <div className="flex justify-end gap-3 p-4">
+          <button
+            disabled={page === 1}
+            onClick={() => setPage((prev) => prev - 1)}
+            className="px-3 py-1 text-xs border rounded disabled:opacity-50"
+          >
+            Prev
+          </button>
+
+          <button
+            disabled={page === totalPages}
+            onClick={() => setPage((prev) => prev + 1)}
+            className="px-3 py-1 text-xs border rounded disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
       </div>
+
+      {/* ------------------------------------
+           FULL IMAGE PREVIEW MODAL
+      ------------------------------------ */}
+      {previewImage && (
+        <div
+          className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50"
+          onClick={() => setPreviewImage(null)}
+        >
+          <div
+            className="relative animate-scaleIn"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={previewImage}
+              className="max-w-[90vw] max-h-[90vh] rounded-lg shadow-lg"
+            />
+
+            <button
+              onClick={() => setPreviewImage(null)}
+              className="absolute top-2 right-2 bg-white text-slate-700 
+              rounded-full px-2 py-1 text-xs font-medium shadow hover:bg-slate-100"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 export default VendorMgmnt;
-
-
-
-
-
-
-
-
-
-
 
 
 

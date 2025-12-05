@@ -1,5 +1,5 @@
 import { AxiosInstance } from "@/lib/axios/axios";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type {
   CategoryResponse,
   CreateCategoryPayload,
@@ -36,6 +36,7 @@ export const useGetCategory = (page: number, limit: 10) => {
 
 
 export const useToggleCategoryStatus = () => {
+  const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (categoryId: string) => {
       const response = await AxiosInstance.patch(
@@ -45,5 +46,8 @@ export const useToggleCategoryStatus = () => {
       );
       return response.data;
     },
+    onSuccess: ()=>{
+            queryClient.invalidateQueries({queryKey: ['category"']})
+        }
   });
 };

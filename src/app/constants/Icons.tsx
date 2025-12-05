@@ -60,6 +60,6 @@ vendor sidbar icons
 
 export const vendorMenu = [
   { icon: LayoutDashboard, label: "Dashboard", path: "overview" },
-  { icon: BookOpen, label: "My Books", path: "mybooks" },
+  { icon: BookOpen, label: "My Books", path: "bookmanagement" },
   { icon: Calendar, label: "Events", path: "events" },
 ];
