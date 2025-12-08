@@ -13,7 +13,7 @@ import { isAxiosError } from "axios";
 const VendorLoginPage = () => {
   const loginMutation = useVendorLoginMutation();
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   return (
     <div>
       <Formik
@@ -33,16 +33,16 @@ const VendorLoginPage = () => {
                     vendorId: vendor.vendorId,
                   })
                 );
-                const redirectPath = redirectByRole(response.data.role)
-                navigate(redirectPath)
+                const redirectPath = redirectByRole(response.data.role);
+                navigate(redirectPath);
               },
-              onError:(error)=>{
+              onError: (error) => {
                 let message = ERROR_MESSAGES.SOMETHING_WENT_WRONG;
-                if(isAxiosError(error)){
-                  message = error.response?.data?.message || message
+                if (isAxiosError(error)) {
+                  message = error.response?.data?.message || message;
                 }
-                toast.error(message)
-              }
+                toast.error(message);
+              },
             }
           );
         }}

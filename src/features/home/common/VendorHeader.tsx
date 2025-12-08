@@ -9,7 +9,7 @@ const VendorHeader = ({ onToggleSidebar }: VendorHeaderProps) => {
   const [isDark, setIsDark] = useState(false);
   const [search, setSearch] = useState("");
 
-  // Toggle Tailwind Dark Mode
+
   useEffect(() => {
     const root = document.documentElement;
     if (isDark) root.classList.add("dark");

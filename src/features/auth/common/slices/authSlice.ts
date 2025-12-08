@@ -35,7 +35,8 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setAuthLogin(state, action: PayloadAction<LoginPayload>) {
-      const { email, role, userId, vendorId, userName, phoneNumber, imagekey, isEmailVerified } = action.payload;
+      // const { email, role, userId, vendorId, userName, phoneNumber, imagekey, isEmailVerified } = action.payload;
+      const { email, role, userId, vendorId } = action.payload;
 
       state.email = email;
       state.role = role;
@@ -43,10 +44,10 @@ const authSlice = createSlice({
       state.userId = userId ?? null;
       state.vendorId = vendorId ?? null;
 
-      state.userName = userName ?? null;
-      state.phoneNumber = phoneNumber ?? null;
-      state.imagekey = imagekey ?? null;
-      state.isEmailVerified = isEmailVerified ?? null;
+      // state.userName = userName ?? null;
+      // state.phoneNumber = phoneNumber ?? null;
+      // state.imagekey = imagekey ?? null;
+      // state.isEmailVerified = isEmailVerified ?? null;
       const data = {
         email,
         role,
@@ -54,10 +55,10 @@ const authSlice = createSlice({
         vendorId,
         isAuthenticated: true,
 
-        userName,
-        phoneNumber,
-        imagekey,
-        isEmailVerified
+        // userName,
+        // phoneNumber,
+        // imagekey,
+        // isEmailVerified
       };
 
       if (role === Role.ADMIN) {
@@ -82,10 +83,10 @@ const authSlice = createSlice({
       state.vendorId = null;
       state.isAuthenticated = false;
 
-      state.userName = null;
-      state.phoneNumber = null;
-      state.imagekey = null;
-      state.isEmailVerified = null;
+      // state.userName = null;
+      // state.phoneNumber = null;
+      // state.imagekey = null;
+      // state.isEmailVerified = null;
     },
   },
 });

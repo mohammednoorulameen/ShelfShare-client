@@ -23,7 +23,10 @@ const UserRegisterPage = () => {
     referralCode: "",
     imageKey: null,
   };
-  const handleSubmit = async (values: IUserRegisterForm, resetForm: () => void) => {
+  const handleSubmit = async (
+    values: IUserRegisterForm,
+    resetForm: () => void
+  ) => {
     let imagekey = "";
 
     if (values.imageKey) {
@@ -43,21 +46,21 @@ const UserRegisterPage = () => {
     userRegisterMutation.mutate(payload, {
       onSuccess: (data) => {
         toast.success(SUCCESS_MESSAGES.REGISTER_SUCCESS);
-        resetForm()
-        if(fileInputRef.current){
-          fileInputRef.current.value = ""
+        resetForm();
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
         }
         console.log("register success", data);
       },
 
-       onError: (error: unknown) => {
-    const axiosError = error as AxiosError<{ message: string }>;
+      onError: (error: unknown) => {
+        console.log('checkkk')
+        const axiosError = error as AxiosError<{ message: string }>;
 
-    toast.error(
-      axiosError.response?.data?.message || ERROR_MESSAGES.REGISTER_FAILED
-    );
-  }
-
+        toast.error(
+          axiosError.response?.data?.message || ERROR_MESSAGES.REGISTER_FAILED
+        );
+      },
     });
   };
 
@@ -66,12 +69,12 @@ const UserRegisterPage = () => {
       <Formik
         initialValues={initialValues}
         validationSchema={UserRegisterValidationSchema}
-        onSubmit={(values,{resetForm})=> handleSubmit(values, resetForm)}
+        onSubmit={(values, { resetForm }) => handleSubmit(values, resetForm)}
       >
         {({ setFieldValue }) => (
           <RegisterForm
             type="user"
-            fileInputRef={fileInputRef} 
+            fileInputRef={fileInputRef}
             onFileChange={(file) => setFieldValue("imageKey", file)}
           />
         )}

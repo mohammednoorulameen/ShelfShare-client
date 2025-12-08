@@ -9,10 +9,10 @@ export interface AuthSliceState {
   role: "user" | "admin" | "vendor" | null;
   isAuthenticated: boolean;
 
-  userName?: string | null;
-  phoneNumber?: string | null;
-  imagekey?: string | null;
-  isEmailVerified?: boolean | null;
+  // userName?: string | null;
+  // phoneNumber?: string | null;
+  // imagekey?: string | null;
+  // isEmailVerified?: boolean | null;
 }
 
 /*-----
@@ -25,8 +25,8 @@ export interface LoginPayload {
   userId?: string;
   vendorId?: string;
 
-  userName: string;
-  phoneNumber: string;
-  imagekey: string;
-  isEmailVerified: boolean;
+  // userName: string;
+  // phoneNumber: string;
+  // imagekey: string;
+  // isEmailVerified: boolean;
 }
