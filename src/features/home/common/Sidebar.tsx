@@ -11,13 +11,50 @@ const SidebarLayout = ({
   onLogout,
   logo,
   title,
-  disabled = false, 
+  disabled = false,
 }: SidebarLayoutProps) => {
+
   const blockClick = () => {
     if (disabled) {
       toast.error("Admin has not verified your vendor account yet!");
     }
   };
+
+
+
+
+  //  Blue Tick Only Badge
+const getBadge = (status?: string) => {
+  if (!status) return null;
+
+  switch (status) {
+    case "approved":
+      return (
+        <img
+          src="https://cdn-icons-png.flaticon.com/512/845/845646.png"
+          alt="Verified"
+          className="w-4 h-4"
+        />
+      );
+
+    case "pending":
+      return (
+        <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-yellow-100 text-yellow-700 border border-yellow-300">
+          Pending
+        </span>
+      );
+
+    case "rejected":
+      return (
+        <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-red-100 text-red-700 border-red-300">
+          Rejected
+        </span>
+      );
+
+    default:
+      return null;
+  }
+};
 
   return (
     <div
@@ -94,11 +131,14 @@ const SidebarLayout = ({
           className="w-9 h-9 rounded-full object-cover"
         />
 
+        {/* Vendor Name + Pinned Badge */}
         {!collapsed && (
           <div className="flex-1 leading-tight">
-            <p className="text-sm font-semibold text-slate-800">
+            <p className="text-sm font-semibold text-slate-800 flex items-center gap-2">
               {profile.name}
+              {getBadge(profile.status)} {/* Blue pinned badge */}
             </p>
+
             <p className="text-xs text-slate-500">{profile.email}</p>
           </div>
         )}
@@ -118,5 +158,7 @@ const SidebarLayout = ({
 };
 
 export default SidebarLayout;
+
+
 
 

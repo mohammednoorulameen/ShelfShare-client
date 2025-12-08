@@ -4,27 +4,32 @@ import {
   Filter,
   Mail,
   Phone,
-  ShieldCheck,
-  ShieldAlert,
   CheckCircle,
   XCircle,
   Shield,
 } from "lucide-react";
-import type { VendorMgmntProps, Vendor } from "../../types/responseVendor.types";
 
-/*---------------------------
+import type {
+  VendorMgmntProps,
+  Vendor,
+} from "../../types/responseVendor.types";
+
+/*--------------
   Vendor Status Checking Logic
-----------------------------*/
+------------------------------------*/
 const getVendorStatus = (vendor: Vendor) => {
-  if (!vendor.isEmailVerified)
-    return { label: "Email not verified", type: "emailPending" };
-
   if (vendor.status === "blocked") return { label: "Blocked", type: "blocked" };
 
-  if (!vendor.isAdminVerified)
+  if (vendor.isAdminVerifiedStatus === "pending")
     return { label: "Pending admin approval", type: "pending" };
 
-  return { label: "Verified", type: "verified" };
+  if (vendor.isAdminVerifiedStatus === "rejected")
+    return { label: "Rejected", type: "rejected" };
+
+  if (vendor.isAdminVerifiedStatus === "approved")
+    return { label: "Verified", type: "verified" };
+
+  return { label: "Unknown", type: "unknown" };
 };
 
 const fallbackImg = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
@@ -41,8 +46,12 @@ const VendorMgmnt: React.FC<VendorMgmntProps> = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
-  // NEW — IMAGE PREVIEW STATE
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+
+  // Reject Modal
+  const [showRejectModal, setShowRejectModal] = useState(false);
+  const [rejectReason, setRejectReason] = useState("");
+  const [rejectVendorId, setRejectVendorId] = useState<string | null>(null);
 
   const filteredVendors = vendors.filter(
     (vendor) =>
@@ -69,10 +78,11 @@ const VendorMgmnt: React.FC<VendorMgmntProps> = ({
             Vendor Management
           </h2>
           <p className="text-xs text-slate-500 mt-0.5">
-            Manage vendor accounts, verification & access
+            Manage vendor verification, status & access
           </p>
         </div>
 
+        {/* SEARCH BAR */}
         <div className="flex gap-2 w-full sm:w-auto">
           <div className="relative flex-1 sm:w-56">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -92,7 +102,7 @@ const VendorMgmnt: React.FC<VendorMgmntProps> = ({
         </div>
       </div>
 
-      {/* VENDORS TABLE */}
+      {/* TABLE */}
       <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
@@ -112,7 +122,7 @@ const VendorMgmnt: React.FC<VendorMgmntProps> = ({
                 const badgeClasses =
                   type === "verified"
                     ? "bg-green-50 text-green-700 border-green-200"
-                    : type === "blocked"
+                    : type === "blocked" || type === "rejected"
                     ? "bg-red-50 text-red-700 border-red-200"
                     : type === "emailPending"
                     ? "bg-amber-50 text-amber-700 border-amber-200"
@@ -121,7 +131,7 @@ const VendorMgmnt: React.FC<VendorMgmntProps> = ({
                 const Icon =
                   type === "verified"
                     ? CheckCircle
-                    : type === "blocked"
+                    : type === "blocked" || type === "rejected"
                     ? XCircle
                     : Shield;
 
@@ -130,21 +140,19 @@ const VendorMgmnt: React.FC<VendorMgmntProps> = ({
                     {/* VENDOR INFO */}
                     <td className="px-5 py-3">
                       <div className="flex items-center gap-3">
-                        {/* CLICKABLE IMAGE */}
                         <img
                           src={vendor.imageKey || fallbackImg}
-                          alt={vendor.bussinessName}
                           onClick={() =>
                             setPreviewImage(vendor.imageKey || fallbackImg)
                           }
-                          className="w-10 h-10 rounded-full object-cover border cursor-pointer 
-                          hover:opacity-80 transition"
+                          className="w-10 h-10 rounded-full object-cover border cursor-pointer hover:opacity-80"
                         />
 
                         <div>
                           <p className="font-medium text-sm text-slate-900 flex items-center gap-1">
                             {vendor.bussinessName}
-                            {vendor.isAdminVerified && (
+
+                            {vendor.isAdminVerifiedStatus === "approved" && (
                               <CheckCircle className="w-3.5 h-3.5 text-green-500" />
                             )}
                           </p>
@@ -172,8 +180,7 @@ const VendorMgmnt: React.FC<VendorMgmntProps> = ({
                     {/* STATUS */}
                     <td className="px-5 py-3">
                       <span
-                        className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] 
-                        font-medium border ${badgeClasses}`}
+                        className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium border ${badgeClasses}`}
                       >
                         <Icon className="w-3 h-3 mr-1" />
                         {label}
@@ -183,24 +190,30 @@ const VendorMgmnt: React.FC<VendorMgmntProps> = ({
                     {/* ACTION BUTTONS */}
                     <td className="px-5 py-3 text-right">
                       <div className="flex items-center justify-end gap-2">
-                        {/* VERIFY / REJECT */}
-                        {!vendor.isAdminVerified ? (
+                        {/* APPROVE */}
+                        {vendor.isAdminVerifiedStatus !== "approved" && (
                           <button
-                            onClick={() => onToggleVerify(vendor._id)}
-                            className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] 
-                            font-medium text-white bg-green-500 rounded-md hover:bg-green-600 shadow-sm"
+                            onClick={() =>
+                              onToggleVerify({
+                                vendorId: vendor.vendorId,
+                                action: "approved",
+                              })
+                            }
+                            className="px-3 py-1 text-xs bg-green-500 text-white rounded-md hover:bg-green-600"
                           >
-                            <ShieldCheck className="w-3.5 h-3.5" />
-                            Verify
+                            Approve
                           </button>
-                        ) : (
+                        )}
+
+                        {/* REJECT */}
+                        {vendor.isAdminVerifiedStatus === "approved" && (
                           <button
-                            onClick={() => onToggleVerify(vendor._id)}
-                            className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] 
-                            font-medium text-red-600 bg-white border border-red-200 rounded-md 
-                            hover:bg-red-50 shadow-sm"
+                            onClick={() => {
+                              setRejectVendorId(vendor.vendorId);
+                              setShowRejectModal(true);
+                            }}
+                            className="px-3 py-1 text-xs bg-red-100 text-red-600 border border-red-200 rounded-md hover:bg-red-200"
                           >
-                            <XCircle className="w-3.5 h-3.5" />
                             Reject
                           </button>
                         )}
@@ -208,22 +221,16 @@ const VendorMgmnt: React.FC<VendorMgmntProps> = ({
                         {/* BLOCK / UNBLOCK */}
                         {vendor.status !== "blocked" ? (
                           <button
-                            onClick={() => onToggleBlock(vendor._id)}
-                            className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] 
-                            font-medium text-red-600 bg-white border border-red-200 rounded-md 
-                            hover:bg-red-50 shadow-sm"
+                            onClick={() => onToggleBlock(vendor.vendorId)}
+                            className="px-3 py-1 text-xs bg-red-50 text-red-600 border border-red-300 rounded-md hover:bg-red-100"
                           >
-                            <ShieldAlert className="w-3.5 h-3.5" />
                             Block
                           </button>
                         ) : (
                           <button
-                            onClick={() => onToggleBlock(vendor._id)}
-                            className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] 
-                            font-medium text-slate-600 bg-white border border-slate-200 rounded-md 
-                            hover:bg-slate-50 shadow-sm"
+                            onClick={() => onToggleBlock(vendor.vendorId)}
+                            className="px-3 py-1 text-xs bg-slate-100 text-slate-700 border border-slate-300 rounded-md hover:bg-slate-200"
                           >
-                            <Shield className="w-3.5 h-3.5" />
                             Unblock
                           </button>
                         )}
@@ -234,46 +241,34 @@ const VendorMgmnt: React.FC<VendorMgmntProps> = ({
               })}
             </tbody>
           </table>
-
-          {filteredVendors.length === 0 && (
-            <div className="p-6 text-center text-sm text-slate-500">
-              No vendors found.
-            </div>
-          )}
         </div>
 
-        {/* PAGINATION */}
-        <div className="flex justify-end gap-3 p-4">
+        {/* Pagination */}
+        <div className="flex justify-end gap-3 p-3">
           <button
             disabled={page === 1}
             onClick={() => setPage((prev) => prev - 1)}
-            className="px-3 py-1 text-xs border rounded disabled:opacity-50"
+            className="px-3 py-1 border rounded disabled:opacity-50 text-xs"
           >
             Prev
           </button>
-
           <button
             disabled={page === totalPages}
             onClick={() => setPage((prev) => prev + 1)}
-            className="px-3 py-1 text-xs border rounded disabled:opacity-50"
+            className="px-3 py-1 border rounded disabled:opacity-50 text-xs"
           >
             Next
           </button>
         </div>
       </div>
 
-      {/* ------------------------------------
-           FULL IMAGE PREVIEW MODAL
-      ------------------------------------ */}
+      {/* IMAGE PREVIEW MODAL */}
       {previewImage && (
         <div
           className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50"
           onClick={() => setPreviewImage(null)}
         >
-          <div
-            className="relative animate-scaleIn"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="relative">
             <img
               src={previewImage}
               className="max-w-[90vw] max-h-[90vh] rounded-lg shadow-lg"
@@ -281,11 +276,67 @@ const VendorMgmnt: React.FC<VendorMgmntProps> = ({
 
             <button
               onClick={() => setPreviewImage(null)}
-              className="absolute top-2 right-2 bg-white text-slate-700 
-              rounded-full px-2 py-1 text-xs font-medium shadow hover:bg-slate-100"
+              className="absolute top-2 right-2 text-black bg-white rounded-full px-2 py-1 text-xs"
             >
               ✕
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* REJECT MODAL */}
+      {showRejectModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg w-96 shadow-lg">
+            <h3 className="text-lg font-semibold text-red-600">
+              Reject Vendor
+            </h3>
+            <p className="text-sm text-slate-600 mt-1">
+              Provide a reason for rejection:
+            </p>
+
+            <textarea
+              value={rejectReason}
+              onChange={(e) => setRejectReason(e.target.value)}
+              className="w-full mt-3 p-2 border rounded-md text-sm"
+              rows={4}
+              placeholder="Reason for rejection..."
+            />
+
+            <div className="flex justify-end gap-3 mt-4">
+              <button
+                onClick={() => {
+                  setShowRejectModal(false);
+                  setRejectReason("");
+                  setRejectVendorId(null);
+                }}
+                className="px-3 py-1 bg-slate-200 text-sm rounded hover:bg-slate-300"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={() => {
+                  if (!rejectReason.trim()) {
+                    alert("Please enter a rejection reason");
+                    return;
+                  }
+
+                  onToggleVerify({
+                    vendorId: rejectVendorId!,
+                    action: "rejected",
+                    reason: rejectReason,
+                  });
+
+                  setShowRejectModal(false);
+                  setRejectReason("");
+                  setRejectVendorId(null);
+                }}
+                className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
+              >
+                Submit
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -294,13 +345,3 @@ const VendorMgmnt: React.FC<VendorMgmntProps> = ({
 };
 
 export default VendorMgmnt;
-
-
-
-
-
-
-
-
-
-
