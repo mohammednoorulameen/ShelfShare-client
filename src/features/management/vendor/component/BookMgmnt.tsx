@@ -9,7 +9,7 @@ import {
   Star,
   Plus
 } from "lucide-react";
-import type { Book, BookManagementPropss } from "../../types/book.types";
+import type { Book, BookManagementPropss } from "../../types/product.types";
 import { useNavigate } from "react-router-dom";
 
 const getBookStatus = (book: Book) => {

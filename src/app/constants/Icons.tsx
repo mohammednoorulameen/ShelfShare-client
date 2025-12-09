@@ -14,6 +14,16 @@ import {
   Calendar,
   CreditCard,
   Tags,
+    UploadCloud, 
+  Sparkles, 
+  DollarSign, 
+  Building2, 
+  FileText,
+  CheckCircle2,
+  X,
+  Loader2,
+  Image as ImageIcon,
+  Trash2
 } from "lucide-react";
 
 /*----------------
@@ -63,3 +73,24 @@ export const vendorMenu = [
   { icon: BookOpen, label: "My Books", path: "bookmanagement" },
   { icon: Calendar, label: "Events", path: "events" },
 ];
+
+
+
+
+
+
+export const AddBooks = {
+  Book: BookOpen,
+  Upload: UploadCloud,
+  AI: Sparkles,
+  Money: DollarSign,
+  Calendar: Calendar,
+  User: User,
+  Building: Building2,
+  Description: FileText,
+  Success: CheckCircle2,
+  Close: X,
+  Spinner: Loader2,
+  Image: ImageIcon,
+  Delete: Trash2
+};

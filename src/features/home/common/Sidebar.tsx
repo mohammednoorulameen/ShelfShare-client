@@ -20,10 +20,6 @@ const SidebarLayout = ({
     }
   };
 
-
-
-
-  //  Blue Tick Only Badge
 const getBadge = (status?: string) => {
   if (!status) return null;
 
