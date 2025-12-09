@@ -2,11 +2,11 @@
 import type { RouteObject } from "react-router-dom"
 import ProtectedRoute from "./protector/ProtectedRoute"
 import { Role } from "@/types/role.enum"
-import VendorLayout from "@/features/home/vendor/vendorLayout/VendorLayout"
 import Greeting from "@/features/home/common/Greeting"
 import VendorOverviewPage from "@/features/overview/vendor/pages/VendorOverviewPage"
 import BookMgmntPage from "@/features/management/vendor/pages/BookMgmntPage"
 import AddRentBookPage from "@/features/management/vendor/pages/AddRentBookPage"
+import VendorLayoutPage from "@/features/home/vendor/pages/VendorLayoutPage"
 
 
 // const VendorDashboard = lazy(() => import("@/features/home/vendor/VendorDashboard"))
@@ -17,7 +17,7 @@ export const VendorRoutes: RouteObject[] = [
       path: "/vendor",
     element: (
       <ProtectedRoute allowedRoles={[Role.VENDOR]}>
-         <VendorLayout/> 
+         <VendorLayoutPage/> 
         </ProtectedRoute>
     ),
     children: [

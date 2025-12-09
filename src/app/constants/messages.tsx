@@ -5,6 +5,7 @@ export const SUCCESS_MESSAGES = {
   REGISTER_SUCCESS: "Verify Your Email!",
   PASSWORD_UPDATE_SUCCESS : "Password updated successfully!",
   CATEGORY_UPDATED : "Category status updated!",
+  REAPPLY_VENDOR  : "Verification request submitted again!",
 
   LOGOUT_SUCCESS: "Logged out successfully!",
   RESET_LINK_SEND: "Send Reset From",

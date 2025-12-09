@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
@@ -10,12 +10,19 @@ import { FcLibrary } from "react-icons/fc";
 import { useGetVendor } from "../api/VendorLayoutApi";
 
 // Lucide + Shadcn UI
-import { AlertCircle, ArrowRight, Mail, FileText, HelpCircle, CheckCircle2 } from "lucide-react"
+import {
+  AlertCircle,
+  ArrowRight,
+  Mail,
+  FileText,
+  HelpCircle,
+  CheckCircle2,
+} from "lucide-react";
 import { Button } from "@/shared-ui/ui/button";
 import { Card } from "@/shared-ui/ui/card";
+import type { VendorLayoutProps } from "../../types/vendorLayout.types";
 
-
-const VendorLayout = () => {
+const VendorLayout = ({ onReapply, isReapplyLoading }: VendorLayoutProps) => {
   const [collapsed, setCollapsed] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -27,7 +34,7 @@ const VendorLayout = () => {
   const disabled = vendor?.isAdminVerifiedStatus !== "approved";
 
   const handleReapply = () => {
-    console.log("Reapplying for verification...");
+    onReapply();
   };
 
   const handleContactSupport = () => {
@@ -36,7 +43,6 @@ const VendorLayout = () => {
 
   return (
     <div className="flex h-screen overflow-hidden bg-slate-50">
-
       {/* Mobile Overlay */}
       {isSidebarOpen && (
         <div
@@ -63,7 +69,7 @@ const VendorLayout = () => {
             name: vendor?.bussinessName || "Loading...",
             email: vendor?.email || "Loading...",
             photo: vendor?.imageKey || fallbackImg,
-            status: vendor?.isAdminVerifiedStatus,  
+            status: vendor?.isAdminVerifiedStatus,
           }}
           onLogout={logout}
           title="Vendor Panel"
@@ -73,23 +79,22 @@ const VendorLayout = () => {
 
       {/* Main Body */}
       <div className="flex-1 flex flex-col overflow-hidden">
-
         <VendorHeader
-          onToggleSidebar={() => setIsSidebarOpen(prev => !prev)}
+          onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
         />
 
         <main className="flex-1 overflow-y-auto p-6">
-
           {/* Loader */}
           {isLoading ? (
-            <div className="text-center text-slate-600 text-sm">Loading vendor details...</div>
+            <div className="text-center text-slate-600 text-sm">
+              Loading vendor details...
+            </div>
           ) : disabled ? (
             // =============================
             // PREMIUM LUCIDE UI DESIGN
             // =============================
             <div className="min-h-[80vh] flex items-center justify-center px-4 py-8">
               <div className="w-full max-w-2xl">
-                
                 {/* Header */}
                 <div className="text-center mb-10">
                   <div className="flex justify-center mb-6">
@@ -106,14 +111,14 @@ const VendorLayout = () => {
                   </h1>
 
                   <p className="text-muted-foreground">
-                    Your vendor account must be verified before accessing the dashboard.
+                    Your vendor account must be verified before accessing the
+                    dashboard.
                   </p>
                 </div>
 
                 {/* Card */}
                 <Card className="bg-card border border-border shadow-lg mb-8 overflow-hidden">
                   <div className="p-8">
-
                     {/* Pending Status */}
                     {vendor?.isAdminVerifiedStatus === "pending" && (
                       <div className="flex items-start gap-4 mb-8 p-4 bg-yellow-100/40 rounded-lg border border-yellow-300/40">
@@ -123,7 +128,8 @@ const VendorLayout = () => {
                             Your verification is pending
                           </h2>
                           <p className="text-sm text-muted-foreground">
-                            Your account is under review. Please wait until the admin verifies your details.
+                            Your account is under review. Please wait until the
+                            admin verifies your details.
                           </p>
                         </div>
                       </div>
@@ -139,7 +145,8 @@ const VendorLayout = () => {
                               Your verification was rejected
                             </h2>
                             <p className="text-sm text-muted-foreground">
-                              We couldn't verify your account with the provided documents.
+                              We couldn't verify your account with the provided
+                              documents.
                             </p>
                           </div>
                         </div>
@@ -153,7 +160,8 @@ const VendorLayout = () => {
 
                           <div className="pl-6 border-l-2 border-border mt-3">
                             <p className="text-foreground font-medium">
-                              {vendor?.adminRejectReason || "Document issue detected"}
+                              {vendor?.adminRejectReason ||
+                                "Document issue detected"}
                             </p>
                           </div>
                         </div>
@@ -167,15 +175,21 @@ const VendorLayout = () => {
 
                           <ol className="space-y-2 text-sm text-muted-foreground">
                             <li className="flex gap-3">
-                              <span className="text-primary font-semibold min-w-6">1</span>
+                              <span className="text-primary font-semibold min-w-6">
+                                1
+                              </span>
                               Review the rejection reason carefully
                             </li>
                             <li className="flex gap-3">
-                              <span className="text-primary font-semibold min-w-6">2</span>
+                              <span className="text-primary font-semibold min-w-6">
+                                2
+                              </span>
                               Fix or replace incorrect documents
                             </li>
                             <li className="flex gap-3">
-                              <span className="text-primary font-semibold min-w-6">3</span>
+                              <span className="text-primary font-semibold min-w-6">
+                                3
+                              </span>
                               Submit your verification request again
                             </li>
                           </ol>
@@ -185,10 +199,20 @@ const VendorLayout = () => {
                         <div className="flex flex-col sm:flex-row gap-3">
                           <Button
                             onClick={handleReapply}
-                            className="flex-1 bg-primary hover:bg-primary/90 font-semibold"
+                            disabled={isReapplyLoading}
+                            className={`
+                                 flex-1 bg-primary hover:bg-primary/90 font-semibold
+                                 ${
+                                   isReapplyLoading
+                                     ? "cursor-wait"
+                                     : "cursor-pointer"
+                                 }
+                                  `}
                           >
-                            Re-Apply
-                            <ArrowRight className="w-4 h-4 ml-2" />
+                            {isReapplyLoading ? "Submitting..." : "Re-Apply"}
+                            {!isReapplyLoading && (
+                              <ArrowRight className="w-4 h-4 ml-2" />
+                            )}
                           </Button>
 
                           <Button
@@ -202,7 +226,6 @@ const VendorLayout = () => {
                         </div>
                       </>
                     )}
-
                   </div>
                 </Card>
 
@@ -234,7 +257,6 @@ const VendorLayout = () => {
           ) : (
             <Outlet />
           )}
-
         </main>
       </div>
     </div>
@@ -242,28 +264,3 @@ const VendorLayout = () => {
 };
 
 export default VendorLayout;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

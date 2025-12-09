@@ -1,4 +1,4 @@
-import type { Book } from "../../types/book.types";
+import type { Book } from "../../types/product.types";
 import BookManagement from "../component/BookMgmnt";
 
 // Dummy Books
