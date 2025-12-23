@@ -1,3 +1,14 @@
+
+
+
+
+
+
+
+
+
+
+
 import React, { useState } from "react";
 import {
   Search,
@@ -9,34 +20,38 @@ import {
   Star,
   Plus
 } from "lucide-react";
-import type { Book, BookManagementPropss } from "../../types/product.types";
-import { useNavigate } from "react-router-dom";
 
-const getBookStatus = (book: Book) => {
+import { useNavigate } from "react-router-dom";
+import type { BookManagementProps, Product } from "../../types/product.types";
+
+const getBookStatus = (book: Product) => {
   if (book.status === "blocked") return { label: "Blocked", type: "blocked" };
   return { label: "Active", type: "active" };
 };
 
 const fallbackCover = "https://cdn-icons-png.flaticon.com/512/29/29302.png";
 
-const BookManagement: React.FC<BookManagementPropss> = ({
+const BookManagement: React.FC<BookManagementProps> = ({
   books,
   page,
   totalPages,
   setPage,
   isLoading,
   isError,
-  onToggleStatus,
+
 }) => {
-    const navigate = useNavigate()
+  console.log('chekc the firehfihnfinfirtnffifnitnfginhfgt4f',books)
+  const navigate = useNavigate()
   const [searchTerm, setSearchTerm] = useState("");
 
+  // const filteredBooks = books
   const filteredBooks = books.filter(
     (book) =>
-      book.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      book.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       book.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
       book.author.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
 
   if (isLoading)
     return <p className="text-center text-sm text-slate-500">Loading...</p>;
@@ -105,7 +120,9 @@ const BookManagement: React.FC<BookManagementPropss> = ({
                 <th className="table-head">Stock</th>
                 <th className="table-head">Price</th>
                 <th className="table-head">Rating</th>
+                <th className="table-head">status</th>
                 <th className="table-head text-right">Actions</th>
+                <th className="table-head text-right">Update</th>
               </tr>
             </thead>
 
@@ -125,13 +142,14 @@ const BookManagement: React.FC<BookManagementPropss> = ({
                       <div className="flex items-center gap-3">
                         <img
                           src={book.imageKey?.[0] || fallbackCover}
-                          alt={book.name}
+                          alt={book.productName}
                           className="w-10 h-14 object-cover rounded border"
                         />
+
                         <div>
-                          <p className="font-medium text-sm text-slate-900">{book.name}</p>
+                          <p className="font-medium text-sm text-slate-900">{book.productName}</p>
                           <p className="text-[11px] text-slate-500">by {book.author}</p>
-                          <p className="text-[11px] text-slate-500">Date: {book.createdAt}</p>
+                          <p className="text-[11px] text-slate-500">Date: {book.createdAt.toLocaleDateString()}</p>
                         </div>
                       </div>
                     </td>
@@ -172,11 +190,18 @@ const BookManagement: React.FC<BookManagementPropss> = ({
                       </div>
                     </td>
 
+                    <td className="table-col">
+                      <div className="flex items-center gap-1">
+                        <Star className="w-3.5 h-3.5 text-yellow-500" />
+                        {book.rating.average} ({book.rating.count})
+                      </div>
+                    </td>
+
                     {/* Action Buttons */}
                     <td className="table-col text-right">
                       {type === "active" ? (
                         <button
-                          onClick={() => onToggleStatus(book._id)}
+                          // onClick={() => onToggleStatus(book._id)}
                           className="btn-red"
                         >
                           <ShieldAlert className="w-3.5 h-3.5" />
@@ -184,7 +209,7 @@ const BookManagement: React.FC<BookManagementPropss> = ({
                         </button>
                       ) : (
                         <button
-                          onClick={() => onToggleStatus(book._id)}
+                          // onClick={() => onToggleStatus(book._id)}
                           className="btn-gray"
                         >
                           <Shield className="w-3.5 h-3.5" />
@@ -192,6 +217,16 @@ const BookManagement: React.FC<BookManagementPropss> = ({
                         </button>
                       )}
                     </td>
+<td className="table-col text-right">
+  <button
+    onClick={() => navigate(`/vendor/updateproduct/${book.productId}`)}
+    className="px-3 py-1.5 text-xs font-medium bg-blue-600 text-white rounded-md 
+               hover:bg-blue-700 transition shadow-sm flex items-center gap-1 float-right"
+  >
+    Update
+  </button>
+</td>
+
 
                   </tr>
                 );

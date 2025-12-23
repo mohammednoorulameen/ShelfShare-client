@@ -7,6 +7,7 @@ import VendorOverviewPage from "@/features/overview/vendor/pages/VendorOverviewP
 import BookMgmntPage from "@/features/management/vendor/pages/BookMgmntPage"
 import AddRentBookPage from "@/features/management/vendor/pages/AddRentBookPage"
 import VendorLayoutPage from "@/features/home/vendor/pages/VendorLayoutPage"
+import UpdateProductPage from "@/features/management/vendor/pages/UpdateProductPage"
 
 
 // const VendorDashboard = lazy(() => import("@/features/home/vendor/VendorDashboard"))
@@ -51,6 +52,14 @@ export const VendorRoutes: RouteObject[] = [
         element: (
           <ProtectedRoute allowedRoles={[Role.VENDOR]}>
             <AddRentBookPage/>
+         </ProtectedRoute>
+        ),
+      },
+      {
+        path: "updateproduct/:id",
+        element: (
+          <ProtectedRoute allowedRoles={[Role.VENDOR]}>
+            <UpdateProductPage/>
          </ProtectedRoute>
         ),
       },

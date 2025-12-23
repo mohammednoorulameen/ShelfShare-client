@@ -7,7 +7,9 @@ import type { IProductPayload } from "../../types/product.types";
 import { useGetVendorCategory } from "../api/GetCategory";
 import type { Category } from "../../types/category.types";
 import { useAppSelector } from "@/app/hooks/useRedux";
-import { useAddProductMutation } from "../api/AddRentBookApi";
+import { useAddProductMutation } from "../api/ProductApi";
+import toast from "react-hot-toast";
+import { isAxiosError } from "axios";
 
 const INITIAL_DATA: IProductPayload = {
   productName: "",
@@ -50,23 +52,12 @@ const AddRentBookPage = () => {
   }, [data]);
 
   const formik = useFormik({
-    initialValues:{ ...INITIAL_DATA, vendorId: CURRENT_VENDOR.id },
-     enableReinitialize: true,
+    initialValues: { ...INITIAL_DATA, vendorId: CURRENT_VENDOR.id },
+    enableReinitialize: true,
     validationSchema: AddBookSchema,
-
-    // onSubmit: async (values) => {
-    //   const payload = {
-    //     ...values,
-    //     vendorId: CURRENT_VENDOR.id,
-    //     rentDate: new Date(values.rentDate),
-    //     rating: { count: 0, average: 0 },
-    //   };
-
-    //   console.log(" FINAL SUBMIT PAYLOAD:", payload);
-    //   alert(`Book "${payload.productName}" submitted successfully!`);
-    // },
     onSubmit: async (values) => {
-      console.log('valies',values)
+      console.log("values", values);
+
       const payload = {
         ...values,
         vendorId: CURRENT_VENDOR.id,
@@ -75,16 +66,24 @@ const AddRentBookPage = () => {
       };
 
       try {
-        await addProduct(payload);
-        alert(`Book "${payload.productName}" added successfully!`);
-      } catch (err) {
-        console.error("Error adding product:", err);
-        alert("Failed to add product");
+        const response = await addProduct(payload);
+        toast.success(
+          response?.message ||
+            `Book "${payload.productName}" added successfully!`
+        );
+      } catch (error) {
+        console.error("Error adding product:", error);
+        let message = "Something went wrong";
+
+        if (isAxiosError(error)) {
+          message = error.response?.data?.message || message;
+        }
+
+        toast.error(message);
       }
     },
   });
 
-  // Image Upload
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files?.length) return;
     const newFiles = Array.from(e.target.files);
@@ -107,7 +106,6 @@ const AddRentBookPage = () => {
     );
   };
 
-  // AI Autofill
   const handleAiAutofill = async () => {
     if (!formik.values.productName) {
       alert("Enter a book name first");
