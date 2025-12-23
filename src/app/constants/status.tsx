@@ -6,3 +6,16 @@ export const AdminVerifyStatus = {
 
 export type AdminVerifyStatus =
   (typeof AdminVerifyStatus)[keyof typeof AdminVerifyStatus];
+
+
+  
+export const Status = {
+  ACTIVE: "active",
+  INVACTIVE: "innactive",
+  BLOCKED: "blocked",
+} as const;
+
+export type Status =
+  (typeof Status)[keyof typeof Status];
+
+

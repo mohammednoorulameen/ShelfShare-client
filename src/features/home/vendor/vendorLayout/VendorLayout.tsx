@@ -26,7 +26,7 @@ const VendorLayout = ({ onReapply, isReapplyLoading }: VendorLayoutProps) => {
   const [collapsed, setCollapsed] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const logout = useLogout();
+  const logout = useLogout(); 
   const { data: vendor, isLoading } = useGetVendor();
 
   const fallbackImg = "https://cdn-icons-png.flaticon.com/512/149/149071.png";

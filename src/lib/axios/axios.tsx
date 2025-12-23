@@ -25,6 +25,7 @@ AxiosInstance.interceptors.response.use(
       originalRequest.url.includes("/auth/google-login") ||
       originalRequest.url.includes("/auth/register")
     ) {
+      console.log('check check check  check  check  check  check ')
       return Promise.reject(error);
     }
 
@@ -37,7 +38,7 @@ AxiosInstance.interceptors.response.use(
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      console.log('check iside axions',error.response)
+      console.log('check axios error',error.response)
 
       try {
         await AxiosInstance.post("/auth/refresh");

@@ -1,21 +1,47 @@
+import type { Status } from "@/app/constants/status";
 import type { Category } from "./category.types";
 
 // Simulating ObjectId as string for frontend
 export type ObjectId = string;
 
-export interface BookRating {
+export interface ProductRating {
   count: number;
   average: number;
 }
 
-export interface Product {
-  _id?: ObjectId;
-  vendorId: ObjectId;
-  name: string;
+export interface ProductResponseDto {
+  _id: ObjectId;
+  vendorId: string;        
+  productId: string;       
+  productName: string;
   actualPrice: number;
   rentPrice: number;
   stock: number;
-  category: ObjectId;
+  category: ObjectId;       
+  description: string;
+  publisher: string;
+  author: string;
+  language: string;
+  rentDate: string;         
+  duration: string;
+  imageKey: string[];
+  status: string;
+  rating: ProductRating;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Product {
+  _id?: ObjectId;
+  vendorId: string;
+  // vendorId: ObjectId;
+  productId : string,
+  productName: string;
+  actualPrice: number;
+  rentPrice: number;
+  stock: number;
+  // category: ObjectId;
+  category: string;
   description: string;
   publisher: string;
   author: string;
@@ -23,8 +49,8 @@ export interface Product {
   rentDate: Date;
   duration: string;
   imageKey: string[];
-  status: "active" | "inactive";
-  rating: BookRating;
+  status: Status
+  rating: ProductRating;
   createdAt: Date;
 }
 
@@ -41,7 +67,7 @@ export interface IProductPayload {
   rentDate: string | Date;
   duration: string;
   imageKey: string[];
-  status: "active" | "inactive";
+  status: Status
   vendorId: string;
 }
 
@@ -73,4 +99,27 @@ export interface AddRentProdectProps {
     id: string;
     name: string;
   };
+}
+
+
+export interface BookManagementProps {
+  books: Product[];
+  page: number;
+  totalPages: number;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
+  isLoading: boolean;
+  isError: boolean;
+  // onToggleStatus: (id: string) => void;
+}
+
+
+export interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+}
+
+
+export interface IUpdateProduct {
+  productId: string;
+  data: Partial<IProductPayload>;
 }

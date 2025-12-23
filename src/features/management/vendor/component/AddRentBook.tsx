@@ -3,7 +3,7 @@ import { config } from "@/config";
 import { AddBooks } from "@/app/constants/Icons";
 import type { AddRentProdectProps } from "../../types/product.types";
 
-const BookForm: React.FC<AddRentProdectProps> = (props) => {
+const AddRentBook: React.FC<AddRentProdectProps> = (props) => {
   const {
     formData,
     setFormData,
@@ -451,4 +451,4 @@ const BookForm: React.FC<AddRentProdectProps> = (props) => {
   );
 };
 
-export default BookForm;
+export default AddRentBook;

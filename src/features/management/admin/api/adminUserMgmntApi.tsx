@@ -2,6 +2,9 @@ import { AxiosInstance } from "@/lib/axios/axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { UserListResponse } from "../../types/responseUser.types";
 
+
+
+
 export const useGetUsers = (page: number, limit: 10) => {
   return useQuery({
     queryKey: ["users", page, limit],
@@ -15,10 +18,12 @@ export const useGetUsers = (page: number, limit: 10) => {
   });
 };
 
+
 export const useBlockUser = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (userId: string) => {
+      console.log('userId', userId)
       const response = await AxiosInstance.patch(
         `/admin/user/${userId}/toggled-block`
       );

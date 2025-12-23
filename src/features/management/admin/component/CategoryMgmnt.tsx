@@ -109,6 +109,9 @@ const CategoryManagement: React.FC<CategoryManagementProps> = ({
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-slate-50 border-b border-slate-200">
+              <th className="px-5 py- text-[10px] font-semibold text-slate-500 uppercase">
+                Index
+              </th>
               <th className="px-5 py-3 text-[10px] font-semibold text-slate-500 uppercase">
                 Name
               </th>
@@ -118,7 +121,7 @@ const CategoryManagement: React.FC<CategoryManagementProps> = ({
               <th className="px-5 py-3 text-[10px] font-semibold text-slate-500 uppercase">
                 Status
               </th>
-              <th className="px-5 py-3 text-[10px] font-semibold text-slate-500 uppercase text-right">
+              <th className="px-5 py- text-[10px] font-semibold text-slate-500 uppercase text-right">
                 Actions
               </th>
             </tr>
@@ -150,8 +153,10 @@ const CategoryManagement: React.FC<CategoryManagementProps> = ({
             )}
 
             {/* REAL CATEGORY DATA */}
-            {categories.map((cat) => (
+            {categories.map((cat,Index) => (
               <tr key={cat._id} className="hover:bg-slate-50 transition">
+              {/* <td className="px-5 py-3 text-sm text-slate-600">{Index + 1 + (page - 1) * 10}</td> */}
+              <td className="px-5 py-3 text-sm text-slate-600">{Index + 1}</td>
                 <td className="px-5 py-3 font-medium text-sm text-slate-900">
                   {cat.name}
                 </td>
@@ -197,6 +202,24 @@ const CategoryManagement: React.FC<CategoryManagementProps> = ({
             ))}
           </tbody>
         </table>
+         {/* Pagination */}
+          <div className="flex justify-end gap-3 p-4">
+            <button
+              // disabled={page === 1}
+              // onClick={() => setPage((prev) => prev - 1)}
+              className="px-3 py-1 text-xs border rounded disabled:opacity-50"
+            >
+              Prev
+            </button>
+
+            <button
+              // disabled={page === totalPages}
+              // onClick={() => setPage((prev) => prev + 1)}
+              className="px-3 py-1 text-xs border rounded disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
       </div>
     </div>
   );
