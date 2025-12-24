@@ -1,7 +1,7 @@
-// export interface CreateCategoryPayload {
-//   name: string;
-//   description: string;
-// }
+export interface CreateCategoryPayload {
+  name: string;
+  description: string;
+}
 
 export interface CategoryManagementProps {
   form: {
@@ -26,7 +26,7 @@ export interface Category {
   categoryId: string;
   name: string;
   description: string;
-  status: "active" | "blocked";
+  status: string
   createdAt: string;
   updatedAt: string;
 }
