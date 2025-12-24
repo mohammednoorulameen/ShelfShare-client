@@ -11,6 +11,7 @@ import {
   ChevronLeft,
   ChevronRight,
   MoreHorizontal,
+  Plus,
 } from "lucide-react";
 
 export type StatusType =
@@ -26,6 +27,10 @@ interface StatusResult {
   type: StatusType;
 }
 
+type CreateForm = {
+  name: string;
+  description: string;
+};
 
 /* ================= TYPES ================= */
 
@@ -36,51 +41,40 @@ export type Column<T> = {
   render: (item: T, index: number) => React.ReactNode;
 };
 
-// interface ManagementTableProps<T> {
-//   title: string;
-//   subtitle: string;
-//   data: T[];
-//   columns: Column<T>[];
-//   page: number;
-//   totalPages: number;
-//   setPage: React.Dispatch<React.SetStateAction<number>>;
-//   isLoading: boolean;
-//   isError: boolean;
-// }
-
-interface ManagementTableProps<T> {
+interface ManagementTableProps<
+  T,
+  F extends CreateForm | undefined = undefined
+> {
   title: string;
   subtitle: string;
   data: T[];
   columns: Column<T>[];
   page: number;
   totalPages: number;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
-  isLoading: boolean;
-  isError: boolean;
-}
-
-
-
-interface ManagementTableProps<T> {
-  title: string;
-  subtitle: string;
-  data: T[];
-  page: number;
-  totalPages: number;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
-  getStatus: (item: T) => StatusResult;
   getName: (item: T) => string;
   getId: (item: T) => string;
-  getEmail: (item: T) => string;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
+  getStatus?: (item: T) => StatusResult;
+  getEmail?: (item: T) => string;
   getPhone?: (item: T) => string;
+  getDescription?: (item: T) => string;
   getImage?: (item: T) => string | undefined;
   getVendorReply?: (item: T) => string | undefined;
   onApprove?: (item: T) => void;
   onReject?: (item: T, reason: string) => void;
   onToggleBlock?: (item: T) => void;
+
+  form?: F;
+  setForm?: React.Dispatch<React.SetStateAction<F>>;
+  onSubmit?: (e: React.FormEvent) => void;
+
   isLoading: boolean;
   isError: boolean;
+
+  showCreate?: boolean;
+  handleCancel?: () => void;
+  handleAddClick?: () => void;
+  enableCreate?: boolean;
 }
 
 const fallbackImg = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
@@ -94,7 +88,7 @@ const statusStyles: Record<StatusType, string> = {
   unknown: "bg-slate-50 text-slate-700 ring-slate-600/20",
 };
 
-function ManagementTable<T>({
+function ManagementTable<T, F extends CreateForm | undefined = undefined>({
   title,
   subtitle,
   data,
@@ -111,23 +105,56 @@ function ManagementTable<T>({
   onApprove,
   onReject,
   onToggleBlock,
+  getDescription,
+  setForm,
+  onSubmit,
+  form,
   isLoading,
   isError,
-  columns
-}: ManagementTableProps<T>) {
+  columns,
+  handleCancel,
+  showCreate,
+  handleAddClick,
+  enableCreate,
+}: ManagementTableProps<T, F>) {
   const [searchTerm, setSearchTerm] = useState("");
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [rejectReason, setRejectReason] = useState("");
   const [rejectItem, setRejectItem] = useState<T | null>(null);
+  // const [showCreate, setShowCreate] = useState(false);
+  // const isFormFilled = form.name.trim() || form.description.trim();
+  const isFormFilled =
+    !!form && (form.name.trim() !== "" || form.description.trim() !== "");
+  const isFormNotFilled =
+    form && (form.name.trim() == "" || form.description.trim() == "");
+
+  const canCreate = enableCreate && form && setForm && onSubmit;
+
+  //   const handleAddClick = () => {
+  //     setShowCreate(true);
+  //   };
+
+  //   // const handleCancel = () => {
+  //   //   setShowCreate(false);
+  //   //   setForm({ name: "", description: "" });
+  //   // };
+  //   const handleCancel = () => {
+  //   setShowCreate(false);
+
+  //   if (setForm) {
+  //     setForm({ name: "", description: "" } as F);
+  //   }
+  // };
 
   const filteredData = (data || []).filter((item) => {
     const name = getName(item)?.toLowerCase() || "";
-    const email = getEmail(item)?.toLowerCase() || "";
+    const email = getEmail?.(item)?.toLowerCase() || "";
     return (
       name.includes(searchTerm.toLowerCase()) ||
       email.includes(searchTerm.toLowerCase())
     );
   });
+
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center py-24 space-y-4">
@@ -167,18 +194,117 @@ function ManagementTable<T>({
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="relative group w-full md:w-auto">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
-            <input
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search..."
-              className="pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm w-full md:w-72 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all outline-none"
-            />
-          </div>
-          <button className="p-2.5 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors shadow-sm">
-            <Filter className="w-4 h-4 text-slate-600" />
-          </button>
+          {!showCreate && (
+            <div className="relative group w-full md:w-auto">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
+              <input
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search..."
+                className="pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm w-full md:w-72 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all outline-none"
+              />
+            </div>
+          )}
+          {!showCreate && (
+            <button className="p-2.5 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors shadow-sm">
+              <Filter className="w-4 h-4 text-slate-600" />
+            </button>
+          )}
+          {showCreate && canCreate && (
+            <form
+              onSubmit={(e) => {
+                onSubmit?.(e);
+                handleCancel?.();
+              }}
+              className="flex gap-3 items-center"
+            >
+              <input
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                placeholder="Category"
+                required
+                className="
+                  pl-4 pr-4 py-3
+                  bg-white border border-slate-200
+                  rounded-xl
+                  text-base
+                  focus:ring-4 focus:ring-blue-500/10
+                  focus:border-blue-500
+                  transition-all outline-none
+                "
+              />
+
+              <input
+                value={form.description}
+                onChange={(e) =>
+                  setForm({ ...form, description: e.target.value })
+                }
+                placeholder="Description"
+                required
+                className="
+                  pl-4 pr-4 py-3
+                  bg-white border border-slate-200
+                  rounded-xl
+                  text-base
+                  focus:ring-4 focus:ring-blue-500/10
+                  focus:border-blue-500
+                  transition-all outline-none
+                "
+              />
+
+              {/* SAVE */}
+              {!isFormNotFilled && (
+                <button
+                  type="submit"
+                  className="
+                  flex items-center gap-2
+                  px-4 py-3
+                  bg-blue-600 text-white
+                  text-sm font-medium
+                  rounded-xl
+                  hover:bg-blue-700
+                  shadow-sm
+                "
+                >
+                  Save
+                </button>
+              )}
+
+              {/* CANCEL */}
+              {(isFormFilled || isFormNotFilled) && (
+                <button
+                  type="button"
+                  onClick={handleCancel}
+                  className="
+                    px-4 py-3
+                    text-sm
+                    border border-slate-200
+                    rounded-xl
+                    hover:bg-slate-50
+                  "
+                >
+                  Cancel
+                </button>
+              )}
+            </form>
+          )}
+          {!showCreate && canCreate && (
+            <button
+              onClick={handleAddClick}
+              className="
+                flex items-center gap-2
+                px-4 py-3
+                bg-blue-600 text-white
+                text-sm font-medium
+                rounded-xl
+                hover:bg-blue-700
+                shadow-sm
+              "
+            >
+              <Plus className="w-5 h-5" />
+              Add Category
+            </button>
+          )}
         </div>
       </div>
 
@@ -186,47 +312,31 @@ function ManagementTable<T>({
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
-            {/* <thead className="bg-slate-50/80 border-b border-slate-200">
+            {/* <table className="w-full border-collapse"> */}
+            <thead className="bg-slate-50 border-b">
               <tr>
-                <th className="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-widest">
-                  #
-                </th>
-                <th className="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-widest">
-                  Details
-                </th>
-                <th className="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-widest">
-                  Contact
-                </th>
-                <th className="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-widest">
-                  Status
-                </th>
-                <th className="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-widest text-right">
-                  Actions
-                </th>
+                {columns.map((col) => (
+                  <th
+                    key={col.key}
+                    className={`px-6 py-4 text-xs font-bold uppercase text-slate-500 ${
+                      col.align === "right" ? "text-right" : "text-left"
+                    }`}
+                  >
+                    {col.header}
+                  </th>
+                ))}
               </tr>
-            </thead> */}
-
-             {/* <table className="w-full border-collapse"> */}
-          <thead className="bg-slate-50 border-b">
-            <tr>
-              {columns.map((col) => (
-                <th
-                  key={col.key}
-                  className={`px-6 py-4 text-xs font-bold uppercase text-slate-500 ${
-                    col.align === "right" ? "text-right" : "text-left"
-                  }`}
-                >
-                  {col.header}
-                </th>
-              ))}
-            </tr>
-          </thead>
-
+            </thead>
 
             <tbody className="divide-y divide-slate-100">
               {filteredData.length > 0 ? (
                 filteredData.map((item, index) => {
-                  const { label, type } = getStatus(item);
+                  // const { label, type } = getStatus(item);
+                  const { label, type } = getStatus?.(item) ?? {
+                    label: "Unknown",
+                    type: "unknown",
+                  };
+
                   const isBlocked = type === "blocked";
                   const isRejected = type === "rejected";
                   const isVerified = type === "verified";
@@ -245,7 +355,7 @@ function ManagementTable<T>({
                   const canShowApprove =
                     onApprove &&
                     !isVerified &&
-                    ( isPending || (isRejected && reply));
+                    (isPending || (isRejected && reply));
 
                   // const canShowReject = onReject && !isRejected && !isVerified && !isPending;
                   const canShowReject = onReject && !isRejected && !isPending;
@@ -280,13 +390,20 @@ function ManagementTable<T>({
                           </div>
                         </div>
                       </td>
-
                       <td className="px-6 py-4 whitespace-nowrap">
+                        {getDescription && (
+                          <p className="text-xs text-slate-600 max-w-xs truncate">
+                            {getDescription(item) || "-"}
+                          </p>
+                        )}
                         <div className="space-y-1">
-                          <div className="flex items-center gap-2 text-xs text-slate-600">
-                            <Mail className="w-3.5 h-3.5 text-slate-400" />
-                            {getEmail(item)}
-                          </div>
+                          {getEmail && (
+                            <div className="flex items-center gap-2 text-xs text-slate-600">
+                              <Mail className="w-3.5 h-3.5 text-slate-400" />
+                              {getEmail(item)}
+                            </div>
+                          )}
+
                           {getPhone && (
                             <div className="flex items-center gap-2 text-xs text-slate-600">
                               <Phone className="w-3.5 h-3.5 text-slate-400" />
@@ -295,6 +412,7 @@ function ManagementTable<T>({
                           )}
                         </div>
                       </td>
+
                       <td className="px-6 py-4">
                         <div className="flex flex-col items-start gap-1.5">
                           <span
@@ -319,55 +437,52 @@ function ManagementTable<T>({
                         </div>
                       </td>
 
+                      {!isEmailUnverified && (
+                        <td className="px-6 py-4 text-right">
+                          <div className="flex justify-end items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            {canShowApprove && (
+                              <button
+                                onClick={() => onApprove(item)}
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-bold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 shadow-sm active:scale-95 transition-all"
+                              >
+                                <CheckCircle className="w-3.5 h-3.5" />
+                                Approve
+                              </button>
+                            )}
 
+                            {canShowReject && (
+                              <button
+                                onClick={() => setRejectItem(item)}
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-bold bg-white text-red-600 border border-red-200 rounded-lg hover:bg-red-50 active:scale-95 transition-all"
+                              >
+                                <XCircle className="w-3.5 h-3.5" />
+                                Reject
+                              </button>
+                            )}
 
-
-
-                  { !isEmailUnverified &&   <td className="px-6 py-4 text-right">
-                        <div className="flex justify-end items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                          {canShowApprove && (
-                            <button
-                              onClick={() => onApprove(item)}
-                              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-bold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 shadow-sm active:scale-95 transition-all"
-                            >
-                              <CheckCircle className="w-3.5 h-3.5" />
-                              Approve
-                            </button>
-                          )}
-
-                          {canShowReject && (
-                            <button
-                              onClick={() => setRejectItem(item)}
-                              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-bold bg-white text-red-600 border border-red-200 rounded-lg hover:bg-red-50 active:scale-95 transition-all"
-                            >
-                              <XCircle className="w-3.5 h-3.5" />
-                              Reject
-                            </button>
-                          )}
-
-                          {onToggleBlock && type !== "pending" && (
-                            <button
-                              onClick={() => onToggleBlock(item)}
-                              className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-bold rounded-lg border transition-all active:scale-95 ${
-                                isBlocked
-                                  ? "bg-red-600 text-white border-red-600 hover:bg-red-700"
-                                  : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
-                              }`}
-                            >
-                              {isBlocked ? (
-                                <ShieldAlert className="w-3.5 h-3.5" />
-                              ) : (
-                                <Shield className="w-3.5 h-3.5" />
-                              )}
-                              {isBlocked ? "Unblock" : "Block"}
-                            </button>
-                          )}
-                        </div>
-                        <div className="group-hover:hidden text-slate-300">
-                          <MoreHorizontal className="w-5 h-5 ml-auto" />
-                        </div>
-                      </td>
-                      }
+                            {onToggleBlock && type !== "pending" && (
+                              <button
+                                onClick={() => onToggleBlock(item)}
+                                className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-bold rounded-lg border transition-all active:scale-95 ${
+                                  isBlocked
+                                    ? "bg-red-600 text-white border-red-600 hover:bg-red-700"
+                                    : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                                }`}
+                              >
+                                {isBlocked ? (
+                                  <ShieldAlert className="w-3.5 h-3.5" />
+                                ) : (
+                                  <Shield className="w-3.5 h-3.5" />
+                                )}
+                                {isBlocked ? "Unblock" : "Block"}
+                              </button>
+                            )}
+                          </div>
+                          <div className="group-hover:hidden text-slate-300">
+                            <MoreHorizontal className="w-5 h-5 ml-auto" />
+                          </div>
+                        </td>
+                      )}
                     </tr>
                   );
                 })
@@ -381,8 +496,6 @@ function ManagementTable<T>({
                   </td>
                 </tr>
               )}
-
-              
             </tbody>
           </table>
         </div>
@@ -421,7 +534,7 @@ function ManagementTable<T>({
       {/* IMAGE PREVIEW */}
       {previewImage && (
         <div
-          className="fixed inset-0 bg-slate-950/90 backdrop-blur-md flex items-center justify-center z-[100] p-6"
+          className="fixed inset-0 bg-slate-950/90 backdrop-blur-md flex items-center justify-center z-100 p-6"
           onClick={() => setPreviewImage(null)}
         >
           <img
@@ -433,7 +546,7 @@ function ManagementTable<T>({
 
       {/* REJECT MODAL */}
       {rejectItem && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4">
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-100 p-4">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md animate-in fade-in slide-in-from-bottom-4 duration-300">
             <div className="p-6 text-center">
               <div className="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">

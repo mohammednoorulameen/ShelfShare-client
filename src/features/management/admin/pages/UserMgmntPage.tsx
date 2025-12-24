@@ -1,76 +1,19 @@
-// import ManagementTable from '@/shared/DataTable';
-// import React from 'react';
-// import type { User, UserMgmntProps } from '../../types/responseUser.types';
-
-// const UserMgmnt: React.FC<UserMgmntProps> = ({
-//   users,
-//   page,
-//   totalPages,
-//   setPage,
-//   isLoading,
-//   isError,
-//   onToggleBlock
-// }) => {
-
-//   const users : User[] = data?.data ?? []
-
-//   return (
-//     <ManagementTable<User>
-// title="User Management"
-// subtitle="Manage your platform users, monitor status and control access."
-// data={users}
-// page={page}
-// totalPages={totalPages}
-// setPage={setPage}
-// isLoading={isLoading}
-// isError={isError}
-
-//       // MAPPING FUNCTIONS
-// getName={(u) => u.userName}
-// getId={(u) => u.userId}
-// getEmail={(u) => u.email}
-// getPhone={(u) => u.phoneNumber}
-// getImage={(u) => u.imageKey}
-
-//       // STATUS LOGIC
-//       getStatus={(u) => ({
-//         label: u.status,
-//         // Map your string status to the table's color types
-//         type: u.status === 'blocked' ? 'blocked' : 'verified'
-//       })}
-
-//       // ACTIONS
-//       // We ONLY pass onToggleBlock.
-//       // Because we leave out onApprove and onReject, those buttons will NOT show.
-//       onToggleBlock={(u) => onToggleBlock(u.userId)}
-//     />
-//   );
-// }
-
-// export default UserMgmnt;
-
-
 import { useBlockUser, useGetUsers } from "../api/adminUserMgmntApi";
 import type { User } from "../../types/responseUser.types";
 import ManagementTable, { type Column } from "@/shared/DataTable";
 import { useState } from "react";
 
-type StatusType = "verified" | "blocked" | "rejected" | "pending" | "unknown"  ;
-
+type StatusType = "verified" | "blocked" | "rejected" | "pending" | "unknown";
 
 interface StatusResult {
   label: string;
   type: StatusType;
 }
 
-
-
 /* ================= STATUS HELPERS ================= */
 
-
 const getUserStatus = (user: User): StatusResult => {
-  if (!user.isEmailVerified)
-    return { label: " ENverified", type: "pending" };
+  if (!user.isEmailVerified) return { label: " ENverified", type: "pending" };
 
   if (user.status === "blocked") return { label: "Blocked", type: "blocked" };
   return { label: "verified", type: "verified" };
@@ -85,7 +28,7 @@ const UserMgmntPage = () => {
 
   const users: User[] = data?.data ?? [];
 
-    /* ================= TABLE COLUMNS ================= */
+  /* ================= TABLE COLUMNS ================= */
 
   const userColumns: Column<User>[] = [
     {
@@ -149,10 +92,9 @@ const UserMgmntPage = () => {
     },
   ];
 
-
   return (
     <div>
-      <ManagementTable<User>
+      <ManagementTable<User, undefined>
         columns={userColumns}
         getStatus={getUserStatus}
         title="User Management"
@@ -175,40 +117,3 @@ const UserMgmntPage = () => {
 };
 
 export default UserMgmntPage;
-
-
-
-
-
-
-
-
-
-
-// import React, { useState } from 'react'
-// import UserMgmnt from '../component/UserMgmnt'
-// import { useBlockUser, useGetUsers } from '../api/adminUserMgmntApi';
-// import type { User } from '../../types/responseUser.types';
-
-// const UserMgmntPage = () => {
-//     const [page, setPage] = useState(1);
-//     const { data, isLoading, isError } = useGetUsers(page, 10);
-//     const adminBlockUser = useBlockUser()
-
-//     const users : User[] = data?.data ?? []
-//   return (
-//     <div>
-// <UserMgmnt
-//         users = {users}
-//         page = {page}
-//         totalPages = {data?.totalPages ?? 1}
-//         setPage = {setPage}
-//         isLoading = {isLoading}
-//         isError = {isError}
-//         onToggleBlock={adminBlockUser.mutate}
-//         />
-//     </div>
-//   )
-// }
-
-// export default UserMgmntPage
