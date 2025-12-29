@@ -5,8 +5,12 @@ import {
   useBlockVentor,
 } from "../api/adminVendorMgmntApi";
 import type { Vendor } from "../../types/responseVendor.types";
-import type { Column } from "@/shared/DataTable";
+
 import ManagementTable from "@/shared/DataTable";
+import type { Column } from "@/types/dataTable.types";
+import type { StatusResult } from "@/types/constants.types";
+
+/* ================= PAGE ================= */
 
 const VendorMgmntPage = () => {
   const [page, setPage] = useState(1);
@@ -16,18 +20,7 @@ const VendorMgmntPage = () => {
 
   const vendors = data?.data ?? [];
 
-  type StatusType =
-    | "verified"
-    | "blocked"
-    | "rejected"
-    | "pending"
-    | "unknown"
-    | "email_unverified";
-
-  interface StatusResult {
-    label: string;
-    type: StatusType;
-  }
+  /* ================= STATUS HELPERS ================= */
 
   const getVendorStatus = (v: Vendor): StatusResult => {
     if (!v.isEmailVerified) {
@@ -36,17 +29,16 @@ const VendorMgmntPage = () => {
     if (v.isAdminVerifiedStatus === "pending") {
       return { label: "Pending", type: "pending" };
     }
-
     if (v.isAdminVerifiedStatus === "rejected") {
       return { label: "Rejected", type: "rejected" };
     }
-
     if (v.status === "blocked") {
       return { label: "Blocked", type: "blocked" };
     }
-
     return { label: "Verified", type: "verified" };
   };
+
+  /* ================= TABLE COLOMNS ================= */
 
   const adminColumns: Column<Vendor>[] = [
     {
@@ -113,6 +105,8 @@ const VendorMgmntPage = () => {
       ),
     },
   ];
+
+  /* ================= RENDER ================= */
 
   return (
     <ManagementTable<Vendor>

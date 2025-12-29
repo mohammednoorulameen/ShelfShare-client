@@ -4,13 +4,14 @@ import {
   useCreateCategory,
   useGetCategory,
   useToggleCategoryStatus,
+  useUpdateCategory,
 } from "../api/adminCategoryMgmntApi";
-
-import ManagementTable, { type Column } from "@/shared/DataTable";
-import type { Category } from "../../types/category.types";
+import ManagementTable from "@/shared/DataTable";
+import type { Category, StatusResult } from "../../types/category.types";
 import { ERROR_MESSAGES } from "@/app/constants/messages";
 import { isAxiosError } from "axios";
 import toast from "react-hot-toast";
+import type { Column } from "@/types/dataTable.types";
 
 /* ================= PAGE ================= */
 
@@ -20,10 +21,15 @@ const CategoryMgmntPage = () => {
   const { data, isLoading, isError } = useGetCategory(page, 10);
   const toggleCategory = useToggleCategoryStatus();
   const createCategory = useCreateCategory();
+  const updateCategory = useUpdateCategory();
 
-  /* ================= LOCAL STATE (IMPORTANT) ================= */
+  /* ================= STATES ================= */
 
   const [localCategories, setLocalCategories] = useState<Category[]>([]);
+  const [form, setForm] = useState({ name: "", description: "" });
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+
+  /* ================= HANDLE THE SHOW AND HIDE ================= */
 
   useEffect(() => {
     if (data?.data) {
@@ -33,6 +39,7 @@ const CategoryMgmntPage = () => {
 
   const handleAddClick = () => {
     setShowCreate(true);
+    setEditingCategory(null); 
   };
 
   // const handleCancel = () => {
@@ -47,14 +54,7 @@ const CategoryMgmntPage = () => {
     }
   };
 
-  /* ================= STATUS TYPES ================= */
-
-  type StatusType = "verified" | "blocked";
-
-  interface StatusResult {
-    label: string;
-    type: StatusType;
-  }
+  /* ================= STATUS HELPERS ================= */
 
   const getCategoryStatus = (category: Category): StatusResult => {
     if (category.status === "blocked")
@@ -63,33 +63,9 @@ const CategoryMgmntPage = () => {
     return { label: "Verified", type: "verified" };
   };
 
-  const [form, setForm] = useState({
-    name: "",
-    description: "",
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    createCategory.mutate(form, {
-      onSuccess: () => {
-        toast.success("Category created successfully!");
-        setForm({ name: "", description: "" });
-      },
-      onError: (error) => {
-        let message = ERROR_MESSAGES.SOMETHING_WENT_WRONG;
-        if (isAxiosError(error)) {
-          message = error.response?.data?.message || message;
-        }
-        toast.error(message);
-      },
-    });
-  };
-
-  /* ================= HANDLER (OPTIMISTIC UPDATE) ================= */
+  /* ================= HANDLER (OPTIMISTIC UPDATE) STATUS ================= */
 
   const handleToggleBlock = (category: Category) => {
-    // 🔹 optimistic UI update
     setLocalCategories((prev) =>
       prev.map((c) =>
         c._id === category._id
@@ -110,7 +86,81 @@ const CategoryMgmntPage = () => {
     });
   };
 
-  /* ================= COLUMNS ================= */
+  /* ================= HANDLE EDIT CATEGORY ================= */
+  const handleEdit = (category: Category) => {
+    console.log("check the data", category);
+
+    setForm({
+      name: category.name,
+      description: category.description ?? "",
+    });
+
+    setEditingCategory(category);
+    setShowCreate(true);
+  };
+
+  /* ================= HANDLE SUBMIT ================= */
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // EDIT MODE
+
+    if (editingCategory) {
+      updateCategory.mutate(
+        {
+          categoryId: editingCategory.categoryId,
+          data: {
+            name: form.name,
+            description: form.description,
+          },
+        },
+        {
+          onSuccess: (res) => {
+            toast.success("Category updated successfully");
+
+            setLocalCategories((prev) =>
+              prev.map((c) =>
+                c.categoryId === editingCategory.categoryId
+                  ? { ...c, ...res.data }
+                  : c
+              )
+            );
+
+            setEditingCategory(null);
+            setShowCreate(false);
+            setForm({ name: "", description: "" });
+          },
+          onError: (error) => {
+            let message = ERROR_MESSAGES.SOMETHING_WENT_WRONG;
+            if (isAxiosError(error)) {
+              message = error.response?.data?.message || message;
+            }
+            toast.error(message);
+          },
+        }
+      );
+      return;
+    } else {
+      // CREATE MODE
+
+      createCategory.mutate(form, {
+        onSuccess: () => {
+          toast.success("Category created successfully!");
+          setForm({ name: "", description: "" });
+        },
+        onError: (error) => {
+          let message = ERROR_MESSAGES.SOMETHING_WENT_WRONG;
+          if (isAxiosError(error)) {
+            message = error.response?.data?.message || message;
+          }
+          toast.error(message);
+        },
+      });
+    }
+  };
+
+  /* ================= TABLE COLUMNS ================= */
 
   const categoryColumns: Column<Category>[] = [
     {
@@ -192,7 +242,9 @@ const CategoryMgmntPage = () => {
       handleCancel={handleCancel}
       handleAddClick={handleAddClick}
       showCreate={showCreate}
-      enableCreate={true}
+      enableCategory={true}
+      onEdit={handleEdit}
+      isEdit={!!editingCategory} 
     />
   );
 };
