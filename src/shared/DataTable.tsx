@@ -13,69 +13,8 @@ import {
   MoreHorizontal,
   Plus,
 } from "lucide-react";
-
-export type StatusType =
-  | "verified"
-  | "blocked"
-  | "rejected"
-  | "pending"
-  | "email_unverified"
-  | "unknown";
-
-interface StatusResult {
-  label: string;
-  type: StatusType;
-}
-
-type CreateForm = {
-  name: string;
-  description: string;
-};
-
-/* ================= TYPES ================= */
-
-export type Column<T> = {
-  key: string;
-  header: string;
-  align?: "left" | "right" | "center";
-  render: (item: T, index: number) => React.ReactNode;
-};
-
-interface ManagementTableProps<
-  T,
-  F extends CreateForm | undefined = undefined
-> {
-  title: string;
-  subtitle: string;
-  data: T[];
-  columns: Column<T>[];
-  page: number;
-  totalPages: number;
-  getName: (item: T) => string;
-  getId: (item: T) => string;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
-  getStatus?: (item: T) => StatusResult;
-  getEmail?: (item: T) => string;
-  getPhone?: (item: T) => string;
-  getDescription?: (item: T) => string;
-  getImage?: (item: T) => string | undefined;
-  getVendorReply?: (item: T) => string | undefined;
-  onApprove?: (item: T) => void;
-  onReject?: (item: T, reason: string) => void;
-  onToggleBlock?: (item: T) => void;
-
-  form?: F;
-  setForm?: React.Dispatch<React.SetStateAction<F>>;
-  onSubmit?: (e: React.FormEvent) => void;
-
-  isLoading: boolean;
-  isError: boolean;
-
-  showCreate?: boolean;
-  handleCancel?: () => void;
-  handleAddClick?: () => void;
-  enableCreate?: boolean;
-}
+import type { CreateForm, ManagementTableProps } from "@/types/dataTable.types";
+import type { StatusType } from "@/types/constants.types";
 
 const fallbackImg = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
@@ -108,6 +47,8 @@ function ManagementTable<T, F extends CreateForm | undefined = undefined>({
   getDescription,
   setForm,
   onSubmit,
+  onEdit,
+  isEdit,
   form,
   isLoading,
   isError,
@@ -115,12 +56,14 @@ function ManagementTable<T, F extends CreateForm | undefined = undefined>({
   handleCancel,
   showCreate,
   handleAddClick,
-  enableCreate,
+  enableCategory,
 }: ManagementTableProps<T, F>) {
   const [searchTerm, setSearchTerm] = useState("");
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [rejectReason, setRejectReason] = useState("");
   const [rejectItem, setRejectItem] = useState<T | null>(null);
+
+
   // const [showCreate, setShowCreate] = useState(false);
   // const isFormFilled = form.name.trim() || form.description.trim();
   const isFormFilled =
@@ -128,7 +71,7 @@ function ManagementTable<T, F extends CreateForm | undefined = undefined>({
   const isFormNotFilled =
     form && (form.name.trim() == "" || form.description.trim() == "");
 
-  const canCreate = enableCreate && form && setForm && onSubmit;
+  const canCreate = enableCategory && form && setForm && onSubmit;
 
   //   const handleAddClick = () => {
   //     setShowCreate(true);
@@ -266,7 +209,7 @@ function ManagementTable<T, F extends CreateForm | undefined = undefined>({
                   shadow-sm
                 "
                 >
-                  Save
+              { isEdit ?  'update' : 'Save' }
                 </button>
               )}
 
@@ -457,6 +400,16 @@ function ManagementTable<T, F extends CreateForm | undefined = undefined>({
                               >
                                 <XCircle className="w-3.5 h-3.5" />
                                 Reject
+                              </button>
+                            )}
+                            {enableCategory && onEdit && (
+                              <button
+                                  onClick={() => onEdit(item )}
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-bold 
+                                           bg-white text-blue-600 border border-blue-200 
+                                            rounded-lg hover:bg-blue-50 active:scale-95 transition-all"
+                              >
+                                Edit
                               </button>
                             )}
 

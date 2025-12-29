@@ -1,23 +1,9 @@
 import { useBlockUser, useGetUsers } from "../api/adminUserMgmntApi";
 import type { User } from "../../types/responseUser.types";
-import ManagementTable, { type Column } from "@/shared/DataTable";
+import ManagementTable from "@/shared/DataTable";
 import { useState } from "react";
-
-type StatusType = "verified" | "blocked" | "rejected" | "pending" | "unknown";
-
-interface StatusResult {
-  label: string;
-  type: StatusType;
-}
-
-/* ================= STATUS HELPERS ================= */
-
-const getUserStatus = (user: User): StatusResult => {
-  if (!user.isEmailVerified) return { label: " ENverified", type: "pending" };
-
-  if (user.status === "blocked") return { label: "Blocked", type: "blocked" };
-  return { label: "verified", type: "verified" };
-};
+import type { Column } from "@/types/dataTable.types";
+import type { StatusResult } from "@/types/constants.types";
 
 /* ================= PAGE ================= */
 
@@ -27,6 +13,15 @@ const UserMgmntPage = () => {
   const adminBlockUser = useBlockUser();
 
   const users: User[] = data?.data ?? [];
+
+  /* ================= STATUS HELPERS ================= */
+
+  const getUserStatus = (user: User): StatusResult => {
+    if (!user.isEmailVerified) return { label: " ENverified", type: "pending" };
+
+    if (user.status === "blocked") return { label: "Blocked", type: "blocked" };
+    return { label: "verified", type: "verified" };
+  };
 
   /* ================= TABLE COLUMNS ================= */
 
@@ -91,6 +86,8 @@ const UserMgmntPage = () => {
       ),
     },
   ];
+
+  /* ================= RENDER ================= */
 
   return (
     <div>

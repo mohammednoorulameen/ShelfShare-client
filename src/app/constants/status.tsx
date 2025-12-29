@@ -1,3 +1,6 @@
+// import type { StatusType, type StatusType } from "@/types/dataTable.types";
+
+
 export const AdminVerifyStatus = {
   PENDING: "pending",
   APPROVED: "approved",
@@ -17,5 +20,11 @@ export const Status = {
 
 export type Status =
   (typeof Status)[keyof typeof Status];
+
+
+
+
+
+
 
 

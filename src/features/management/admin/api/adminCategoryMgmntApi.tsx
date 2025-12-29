@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type {
   CategoryResponse,
   CreateCategoryPayload,
+  IUpdateCategory,
 } from "../../types/category.types";
 
 export const useCreateCategory = () => {
@@ -33,10 +34,8 @@ export const useGetCategory = (page: number, limit: 10) => {
   });
 };
 
-
-
 export const useToggleCategoryStatus = () => {
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (categoryId: string) => {
       const response = await AxiosInstance.patch(
@@ -46,8 +45,28 @@ export const useToggleCategoryStatus = () => {
       );
       return response.data;
     },
-    onSuccess: ()=>{
-            queryClient.invalidateQueries({queryKey: ['category"']})
-        }
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['category"'] });
+    },
+  });
+};
+
+export const useUpdateCategory = () => {
+  return useMutation({
+    mutationFn: async ({
+      categoryId,
+      data,
+    }: {
+      categoryId: string;
+      data: IUpdateCategory;
+    }) => {
+      const response = await AxiosInstance.put(
+        `/admin/editCategory/${categoryId}`,
+        data,
+        { withCredentials: true }
+      );
+
+      return response.data;
+    },
   });
 };
