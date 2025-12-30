@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import {
   Search,
   Filter,
@@ -45,9 +45,20 @@ function ManagementTable<T, F extends CreateForm | undefined = undefined>({
   onReject,
   onToggleBlock,
   getDescription,
+  getCreatedDate,
   setForm,
   onSubmit,
   onEdit,
+  getRating,
+  getCategory,
+  getPublisher,
+  getLanguage,
+  getStock,
+  getRentPrice,
+  getActualPrice,
+
+  enableBookData,
+
   isEdit,
   form,
   isLoading,
@@ -62,7 +73,6 @@ function ManagementTable<T, F extends CreateForm | undefined = undefined>({
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [rejectReason, setRejectReason] = useState("");
   const [rejectItem, setRejectItem] = useState<T | null>(null);
-
 
   // const [showCreate, setShowCreate] = useState(false);
   // const isFormFilled = form.name.trim() || form.description.trim();
@@ -97,6 +107,8 @@ function ManagementTable<T, F extends CreateForm | undefined = undefined>({
       email.includes(searchTerm.toLowerCase())
     );
   });
+
+  console.log("checkt he data management table ", filteredData);
 
   if (isLoading) {
     return (
@@ -209,7 +221,7 @@ function ManagementTable<T, F extends CreateForm | undefined = undefined>({
                   shadow-sm
                 "
                 >
-              { isEdit ?  'update' : 'Save' }
+                  {isEdit ? "update" : "Save"}
                 </button>
               )}
 
@@ -333,7 +345,8 @@ function ManagementTable<T, F extends CreateForm | undefined = undefined>({
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      
+                    { getDescription &&  getEmail && getPhone && ( <td className="px-6 py-4 whitespace-nowrap">
                         {getDescription && (
                           <p className="text-xs text-slate-600 max-w-xs truncate">
                             {getDescription(item) || "-"}
@@ -355,7 +368,39 @@ function ManagementTable<T, F extends CreateForm | undefined = undefined>({
                           )}
                         </div>
                       </td>
-
+                )}
+                      {enableBookData && (
+                        <>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            {getCreatedDate?.(item)}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            {getCategory?.(item)}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            {getPublisher?.(item)}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            {getLanguage?.(item)}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            {getStock?.(item)}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            {getRating?.(item)}
+                          </td>
+                          <td>
+                             <div className="min-w-0">
+                            <p className="text-sm font-bold text-slate-900 truncate">
+                            ₹{getRentPrice?.(item)}
+                            </p>
+                            <p className="text-[10px] font-mono text-slate-400 truncate uppercase">
+                              ₹{getActualPrice?.(item)}
+                            </p>
+                          </div>
+                          </td>
+                        </>
+                      )}
                       <td className="px-6 py-4">
                         <div className="flex flex-col items-start gap-1.5">
                           <span
@@ -402,16 +447,17 @@ function ManagementTable<T, F extends CreateForm | undefined = undefined>({
                                 Reject
                               </button>
                             )}
-                            {enableCategory && onEdit && (
-                              <button
-                                  onClick={() => onEdit(item )}
-                                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-bold 
+                            {enableCategory ||
+                              (enableBookData && onEdit && (
+                                <button
+                                  onClick={() => onEdit(item)}
+                                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-bold 
                                            bg-white text-blue-600 border border-blue-200 
                                             rounded-lg hover:bg-blue-50 active:scale-95 transition-all"
-                              >
-                                Edit
-                              </button>
-                            )}
+                                >
+                                  Edit
+                                </button>
+                              ))}
 
                             {onToggleBlock && type !== "pending" && (
                               <button

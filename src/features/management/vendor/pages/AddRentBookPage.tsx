@@ -10,6 +10,7 @@ import { useAppSelector } from "@/app/hooks/useRedux";
 import { useAddProductMutation } from "../api/ProductApi";
 import toast from "react-hot-toast";
 import { isAxiosError } from "axios";
+import { imageUploadCloudinery } from "@/app/utils/imageUploadCloudinery";
 
 const INITIAL_DATA: IProductPayload = {
   productName: "",
@@ -34,8 +35,15 @@ const AddRentBookPage = () => {
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [isAiLoading, setIsAiLoading] = useState(false);
   const [categoryList, setCategoryList] = useState<Category[]>([]);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
   const { vendorId, email } = useAppSelector((state) => state.auth);
   const { mutateAsync: addProduct } = useAddProductMutation();
+
+
+  console.log("check the imagefile", imageFiles)
+  console.log("check the imagefile", imageFiles)
+  console.log("check the imagefile", imageFiles)
+  console.log("check the imagefile", imageFiles)
 
   const CURRENT_VENDOR = {
     id: vendorId ?? "",
@@ -58,12 +66,23 @@ const AddRentBookPage = () => {
     onSubmit: async (values) => {
       console.log("values", values);
 
+      let imageUrls : string[] = []
+
+      if(imageFiles.length > 0){
+        imageUrls = await Promise.all(
+          imageFiles.map((file)=> imageUploadCloudinery(file))
+        )
+      }
+
+
       const payload = {
         ...values,
+        imageKey: imageUrls,
         vendorId: CURRENT_VENDOR.id,
         rentDate: new Date(values.rentDate),
         rating: { count: 0, average: 0 },
       };
+    
 
       try {
         const response = await addProduct(payload);
@@ -86,16 +105,21 @@ const AddRentBookPage = () => {
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files?.length) return;
-    const newFiles = Array.from(e.target.files);
+    const files = Array.from(e.target.files);
 
-    const previews = newFiles.map((file) => URL.createObjectURL(file));
     setImagePreviews((prev) => [...prev, ...previews]);
+    setImageFiles((prev) => [...prev, ...files]);
+    const previews = files.map((file) => URL.createObjectURL(file));
+    // const previews = newFiles.map((file) => URL.createObjectURL(file));
+     setImagePreviews((prev) => [...prev, ...previews]);
 
-    formik.setFieldValue("imageKey", [
-      ...formik.values.imageKey,
-      ...newFiles.map((f) => `uploads/${Date.now()}_${f.name}`),
-    ]);
+    // formik.setFieldValue("imageKey", [
+    //   ...formik.values.imageKey,
+    //   ...newFiles.map((f) => `uploads/${Date.now()}_${f.name}`),
+    // ]);
   };
+
+
 
   const removeImage = (index: number) => {
     setImagePreviews((prev) => prev.filter((_, i) => i !== index));
@@ -105,6 +129,9 @@ const AddRentBookPage = () => {
       formik.values.imageKey.filter((_, i) => i !== index)
     );
   };
+
+
+  // ==================== HANDLE AUTOFILL GIMNI API ====================
 
   const handleAiAutofill = async () => {
     if (!formik.values.productName) {
@@ -126,21 +153,17 @@ const AddRentBookPage = () => {
         author: data.author,
         publisher: data.publisher,
         language: data.language,
-        // category:
-        //   categoryList.find((c) => data.categoryName.toLocaleLowerCase().includes(c.name.toLocaleLowerCase()))?.categoryId ||
-        //   formik.values.category,
         category: matchedCategory?._id || formik.values.category,
         actualPrice: data.estimatedPrice ?? formik.values.actualPrice,
       });
     }
-
     setIsAiLoading(false);
   };
 
   console.log("chekc tuhifu3jognwifhn;s", vendorId);
 
   return (
-    <AddRentBook
+    <AddRentBook 
       formData={formik.values}
       handleChange={formik.handleChange}
       handleSubmit={formik.handleSubmit}

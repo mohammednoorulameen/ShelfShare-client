@@ -7,8 +7,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import type { PersonalInfoProps } from "../../types/PersonalInfo.types";
 
 const AccountDashboard: FC<PersonalInfoProps> = ({ user }) => {
+
+
+  console.log('check the image link', user)
   const [activeTab, setActiveTab] = useState("personalinfo");
-  const DEFAULT_AVATAR = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+  const DEFAULT_AVATAR =
+    "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
   // Switch Case - Render content based on active tab
   const renderTabContent = () => {

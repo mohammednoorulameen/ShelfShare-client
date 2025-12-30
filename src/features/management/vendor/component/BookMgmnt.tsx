@@ -1,14 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
 import React, { useState } from "react";
 import {
   Search,
@@ -18,12 +7,11 @@ import {
   Tag,
   IndianRupee,
   Star,
-  Plus
+  Plus,
 } from "lucide-react";
 
 import { useNavigate } from "react-router-dom";
 import type { BookManagementProps, Product } from "../../types/product.types";
-
 const getBookStatus = (book: Product) => {
   if (book.status === "blocked") return { label: "Blocked", type: "blocked" };
   return { label: "Active", type: "active" };
@@ -38,10 +26,9 @@ const BookManagement: React.FC<BookManagementProps> = ({
   setPage,
   isLoading,
   isError,
-
 }) => {
-  console.log('chekc the firehfihnfinfirtnffifnitnfginhfgt4f',books)
-  const navigate = useNavigate()
+  console.log("chekc the firehfihnfinfirtnffifnitnfginhfgt4f", books);
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
 
   // const filteredBooks = books
@@ -52,15 +39,12 @@ const BookManagement: React.FC<BookManagementProps> = ({
       book.author.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-
   if (isLoading)
     return <p className="text-center text-sm text-slate-500">Loading...</p>;
 
   if (isError)
     return (
-      <p className="text-center text-sm text-red-500">
-        Failed to fetch books
-      </p>
+      <p className="text-center text-sm text-red-500">Failed to fetch books</p>
     );
 
   return (
@@ -68,8 +52,12 @@ const BookManagement: React.FC<BookManagementProps> = ({
       {/* -------------------- HEADER ----------------------- */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <div>
-          <h2 className="text-xl font-semibold text-slate-800">Book Management</h2>
-          <p className="text-xs text-slate-500 mt-0.5">Manage all listed books</p>
+          <h2 className="text-xl font-semibold text-slate-800">
+            Book Management
+          </h2>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Manage all listed books
+          </p>
         </div>
 
         <div className="flex gap-2 w-full sm:w-auto items-center">
@@ -87,8 +75,10 @@ const BookManagement: React.FC<BookManagementProps> = ({
           </div>
 
           {/* Filter Button */}
-          <button className="p-2 bg-white border border-slate-200 rounded-md hover:bg-slate-50 
-              text-slate-600 shadow-sm">
+          <button
+            className="p-2 bg-white border border-slate-200 rounded-md hover:bg-slate-50 
+              text-slate-600 shadow-sm"
+          >
             <Filter className="w-4 h-4" />
           </button>
 
@@ -101,8 +91,6 @@ const BookManagement: React.FC<BookManagementProps> = ({
             <Plus className="w-4 h-4" />
             Add Rent Book
           </button>
- 
-
         </div>
       </div>
 
@@ -130,13 +118,11 @@ const BookManagement: React.FC<BookManagementProps> = ({
               {filteredBooks.map((book, index) => {
                 const serialNumber = (page - 1) * 10 + (index + 1);
                 const { type } = getBookStatus(book);
-
+                console.log(book.imageKey);
                 return (
                   <tr key={book._id} className="hover:bg-slate-50 transition">
-
                     {/* Serial Number */}
                     <td className="table-col">{serialNumber}</td>
-
                     {/* Book Details */}
                     <td className="table-col">
                       <div className="flex items-center gap-3">
@@ -145,11 +131,25 @@ const BookManagement: React.FC<BookManagementProps> = ({
                           alt={book.productName}
                           className="w-10 h-14 object-cover rounded border"
                         />
-
+                        {/* <img
+                          src={
+                            book.imageKey?.length
+                              ? `${config.backendUrl}/${book.imageKey[0]}`
+                              : fallbackCover
+                          }
+                          alt={book.productName}
+                          className="w-10 h-14 object-cover rounded border"
+                        /> */}
                         <div>
-                          <p className="font-medium text-sm text-slate-900">{book.productName}</p>
-                          <p className="text-[11px] text-slate-500">by {book.author}</p>
-                          <p className="text-[11px] text-slate-500">Date: {book.createdAt.toLocaleDateString()}</p>
+                          <p className="font-medium text-sm text-slate-900">
+                            {book.productName}
+                          </p>
+                          <p className="text-[11px] text-slate-500">
+                            by {book.author}
+                          </p>
+                          <p className="text-[11px] text-slate-500">
+                            Date: {book.createdAt.toLocaleDateString()}
+                          </p>
                         </div>
                       </div>
                     </td>
@@ -217,17 +217,17 @@ const BookManagement: React.FC<BookManagementProps> = ({
                         </button>
                       )}
                     </td>
-<td className="table-col text-right">
-  <button
-    onClick={() => navigate(`/vendor/updateproduct/${book.productId}`)}
-    className="px-3 py-1.5 text-xs font-medium bg-blue-600 text-white rounded-md 
+                    <td className="table-col text-right">
+                      <button
+                        onClick={() =>
+                          navigate(`/vendor/updateproduct/${book.productId}`)
+                        }
+                        className="px-3 py-1.5 text-xs font-medium bg-blue-600 text-white rounded-md 
                hover:bg-blue-700 transition shadow-sm flex items-center gap-1 float-right"
-  >
-    Update
-  </button>
-</td>
-
-
+                      >
+                        Update
+                      </button>
+                    </td>
                   </tr>
                 );
               })}
@@ -266,5 +266,3 @@ const BookManagement: React.FC<BookManagementProps> = ({
 };
 
 export default BookManagement;
-
-

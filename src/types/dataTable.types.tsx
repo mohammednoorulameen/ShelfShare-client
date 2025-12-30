@@ -30,6 +30,7 @@ export interface ManagementTableProps<
   isError: boolean;
   showCreate?: boolean;
   enableCategory?: boolean;
+  enableBookData?: boolean;
   isEdit?: boolean
 
   onEdit?: (item: T) => void;
@@ -40,8 +41,16 @@ export interface ManagementTableProps<
   setPage: React.Dispatch<React.SetStateAction<number>>;
   getStatus?: (item: T) => StatusResult;
   getEmail?: (item: T) => string;
+  getCategory?:(item: T)=> string;
+  getPublisher?:(item: T)=> string;
+  getLanguage?:(item: T)=> string;
+  getStock?:(item: T)=> string;
+  getRentPrice?:(item: T)=> number;
+  getActualPrice?:(item: T)=> number;
+  getRating?:(item: T)=> number;
   getPhone?: (item: T) => string;
   getDescription?: (item: T) => string;
+  getCreatedDate?: (item: T) => string;
   getImage?: (item: T) => string | undefined;
   getVendorReply?: (item: T) => string | undefined;
   onApprove?: (item: T) => void;
