@@ -233,7 +233,7 @@ const CategoryMgmntPage = () => {
       isError={isError}
       getName={(c) => c.name}
       getId={(c) => c.categoryId}
-      getDescription={(c) => c.description}
+      getCategory={(c) => c.description}
       getStatus={getCategoryStatus}
       onToggleBlock={(c) => handleToggleBlock(c)}
       form={form}

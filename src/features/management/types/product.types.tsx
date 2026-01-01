@@ -31,7 +31,7 @@ export interface ProductResponseDto {
   updatedAt: string;
 }
 
-export interface Product {
+export interface IProduct {
   _id?: ObjectId;
   vendorId: string;
   // vendorId: ObjectId;
@@ -88,7 +88,7 @@ export interface AddRentProdectProps {
   ) => void;
   handleSubmit: (e?: React.FormEvent<HTMLFormElement>) => void;
   categories: Category[];
-  imagePreviews: string[];
+  imagePreviews?: string[];
   fileInputRef: React.RefObject<HTMLInputElement | null>;
   onImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onRemoveImage: (index: number) => void;
@@ -103,7 +103,7 @@ export interface AddRentProdectProps {
 
 
 export interface BookManagementProps {
-  books: Product[];
+  books: IProduct[];
   page: number;
   totalPages: number;
   setPage: React.Dispatch<React.SetStateAction<number>>;
