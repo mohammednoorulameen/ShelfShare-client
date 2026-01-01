@@ -3,7 +3,7 @@ import { config } from "@/config";
 import { AddBooks } from "@/app/constants/Icons";
 import type { AddRentProdectProps } from "../../types/product.types";
 
-const AddRentBook: React.FC<AddRentProdectProps> = (props) => {
+const AddUpdateRentBook: React.FC<AddRentProdectProps> = (props) => {
   const {
     formData,
     setFormData,
@@ -64,7 +64,7 @@ const AddRentBook: React.FC<AddRentProdectProps> = (props) => {
                   Book Title <span className="text-red-500">*</span>
                 </label>
                 <div className="flex gap-2">
-                  <div className="relative flex-grow">
+                  <div className="relative grow">
                     <input
                       type="text"
                       name="productName"
@@ -204,7 +204,7 @@ const AddRentBook: React.FC<AddRentProdectProps> = (props) => {
                 Book Covers
               </h3>
               <span className="text-xs text-gray-500">
-                {imagePreviews.length} images selected
+                {imagePreviews?.length} images selected
               </span>
             </div>
 
@@ -213,7 +213,7 @@ const AddRentBook: React.FC<AddRentProdectProps> = (props) => {
                 {/* Upload Button */}
                 <div
                   onClick={() => fileInputRef.current?.click()}
-                  className="aspect-[3/4] rounded-lg border-2 border-dashed border-gray-300 hover:border-blue-500 hover:bg-blue-50 cursor-pointer flex flex-col items-center justify-center gap-2 transition-all group"
+                  className="aspect-3/4 rounded-lg border-2 border-dashed border-gray-300 hover:border-blue-500 hover:bg-blue-50 cursor-pointer flex flex-col items-center justify-center gap-2 transition-all group"
                 >
                   <input
                     type="file"
@@ -232,10 +232,10 @@ const AddRentBook: React.FC<AddRentProdectProps> = (props) => {
                 </div>
 
                 {/* Previews */}
-                {imagePreviews.map((src, idx) => (
+                {imagePreviews?.map((src, idx) => (
                   <div
                     key={idx}
-                    className="relative group rounded-lg overflow-hidden border border-gray-200 aspect-[3/4] shadow-sm"
+                    className="relative group rounded-lg overflow-hidden border border-gray-200 aspect-3/4 shadow-sm"
                   >
                     <img
                       src={src}
@@ -268,26 +268,18 @@ const AddRentBook: React.FC<AddRentProdectProps> = (props) => {
 
             <div className="space-y-5">
               <div className="bg-gray-50 p-1 rounded-lg flex">
-                {(["active"] as const).map((statusOption) => (
-                // {(["active", "inactive"] as const).map((statusOption) => (
+              
                   <button
-                    key={statusOption}
-                    type="button"
-                    onClick={() =>
-                      setFormData((prev) => ({ ...prev, status: statusOption }))
-                    }
                     className={`flex-1 text-sm font-medium py-2 rounded-md capitalize transition-all ${
-                      formData.status === statusOption
-                        ? statusOption === "active"
+                         formData.status === "active"
                           ? "bg-white text-green-600 shadow-sm border border-gray-100"
                           : "bg-white text-red-600 shadow-sm border border-gray-100"
-                        : "text-gray-400 hover:text-gray-600"
                     }`}
                   >
-                    {statusOption}
+                    {formData.status}
                   </button>
-                ))}
               </div>
+
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -451,4 +443,4 @@ const AddRentBook: React.FC<AddRentProdectProps> = (props) => {
   );
 };
 
-export default AddRentBook;
+export default AddUpdateRentBook;

@@ -1,16 +1,17 @@
 import { useFormik } from "formik";
 import { AddBookSchema } from "../component/Validation";
 import { autofillBookDetails } from "../../services/GeminiServices";
-import AddRentBook from "../component/AddRentBook";
 import { useEffect, useRef, useState } from "react";
 import type { IProductPayload } from "../../types/product.types";
 import { useGetVendorCategory } from "../api/GetCategory";
 import type { Category } from "../../types/category.types";
 import { useAppSelector } from "@/app/hooks/useRedux";
-import { useAddProductMutation } from "../api/ProductApi";
+import { useAddProductMutation} from "../api/ProductApi";
 import toast from "react-hot-toast";
 import { isAxiosError } from "axios";
 import { imageUploadCloudinery } from "@/app/utils/imageUploadCloudinery";
+import { useNavigate } from "react-router-dom";
+import AddUpdateRentBook from "../component/AddUpdateRentBook";
 
 const INITIAL_DATA: IProductPayload = {
   productName: "",
@@ -30,7 +31,7 @@ const INITIAL_DATA: IProductPayload = {
 };
 
 const AddRentBookPage = () => {
-  const { data } = useGetVendorCategory(1, 10);
+  const {  data: getCategoryData, } = useGetVendorCategory(1, 10);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [isAiLoading, setIsAiLoading] = useState(false);
@@ -38,12 +39,7 @@ const AddRentBookPage = () => {
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const { vendorId, email } = useAppSelector((state) => state.auth);
   const { mutateAsync: addProduct } = useAddProductMutation();
-
-
-  console.log("check the imagefile", imageFiles)
-  console.log("check the imagefile", imageFiles)
-  console.log("check the imagefile", imageFiles)
-  console.log("check the imagefile", imageFiles)
+  const navigate = useNavigate()
 
   const CURRENT_VENDOR = {
     id: vendorId ?? "",
@@ -51,13 +47,13 @@ const AddRentBookPage = () => {
   };
 
   useEffect(() => {
-    if (data?.data) {
-      const activeCategories = data.data.filter(
+    if (getCategoryData?.data) {
+      const activeCategories = getCategoryData.data.filter(
         (item) => item.status === "active"
       );
       setCategoryList(activeCategories);
     }
-  }, [data]);
+  }, [getCategoryData]);
 
   const formik = useFormik({
     initialValues: { ...INITIAL_DATA, vendorId: CURRENT_VENDOR.id },
@@ -90,6 +86,7 @@ const AddRentBookPage = () => {
           response?.message ||
             `Book "${payload.productName}" added successfully!`
         );
+        navigate('/vendor/bookmanagement')
       } catch (error) {
         console.error("Error adding product:", error);
         let message = "Something went wrong";
@@ -110,13 +107,8 @@ const AddRentBookPage = () => {
     setImagePreviews((prev) => [...prev, ...previews]);
     setImageFiles((prev) => [...prev, ...files]);
     const previews = files.map((file) => URL.createObjectURL(file));
-    // const previews = newFiles.map((file) => URL.createObjectURL(file));
      setImagePreviews((prev) => [...prev, ...previews]);
 
-    // formik.setFieldValue("imageKey", [
-    //   ...formik.values.imageKey,
-    //   ...newFiles.map((f) => `uploads/${Date.now()}_${f.name}`),
-    // ]);
   };
 
 
@@ -160,10 +152,8 @@ const AddRentBookPage = () => {
     setIsAiLoading(false);
   };
 
-  console.log("chekc tuhifu3jognwifhn;s", vendorId);
-
   return (
-    <AddRentBook 
+    <AddUpdateRentBook
       formData={formik.values}
       handleChange={formik.handleChange}
       handleSubmit={formik.handleSubmit}

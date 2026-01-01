@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 import {
   Search,
   Filter,
@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import type { CreateForm, ManagementTableProps } from "@/types/dataTable.types";
 import type { StatusType } from "@/types/constants.types";
+import { useNavigate } from "react-router-dom";
 
 const fallbackImg = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
@@ -82,6 +83,7 @@ function ManagementTable<T, F extends CreateForm | undefined = undefined>({
     form && (form.name.trim() == "" || form.description.trim() == "");
 
   const canCreate = enableCategory && form && setForm && onSubmit;
+  const navigate = useNavigate();
 
   //   const handleAddClick = () => {
   //     setShowCreate(true);
@@ -163,6 +165,17 @@ function ManagementTable<T, F extends CreateForm | undefined = undefined>({
           {!showCreate && (
             <button className="p-2.5 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors shadow-sm">
               <Filter className="w-4 h-4 text-slate-600" />
+            </button>
+          )}
+
+          {enableBookData && (
+            <button
+              onClick={() => navigate("/vendor/addupdaterentbook")}
+              className="flex items-center gap-1 px-3 py-2 bg-blue-600 text-white 
+            text-xs rounded-md hover:bg-blue-700 shadow-sm"
+            >
+              <Plus className="w-4 h-4" />
+              Add Rent Book
             </button>
           )}
           {showCreate && canCreate && (
@@ -345,30 +358,31 @@ function ManagementTable<T, F extends CreateForm | undefined = undefined>({
                           </div>
                         </div>
                       </td>
-                      
-                    { getDescription &&  getEmail && getPhone && ( <td className="px-6 py-4 whitespace-nowrap">
-                        {getDescription && (
-                          <p className="text-xs text-slate-600 max-w-xs truncate">
-                            {getDescription(item) || "-"}
-                          </p>
-                        )}
-                        <div className="space-y-1">
-                          {getEmail && (
-                            <div className="flex items-center gap-2 text-xs text-slate-600">
-                              <Mail className="w-3.5 h-3.5 text-slate-400" />
-                              {getEmail(item)}
-                            </div>
-                          )}
 
-                          {getPhone && (
-                            <div className="flex items-center gap-2 text-xs text-slate-600">
-                              <Phone className="w-3.5 h-3.5 text-slate-400" />
-                              {getPhone(item)}
-                            </div>
+                      {getDescription && getEmail && getPhone && (
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          {getDescription && (
+                            <p className="text-xs text-slate-600 max-w-xs truncate">
+                              {getDescription(item) || "-"}
+                            </p>
                           )}
-                        </div>
-                      </td>
-                )}
+                          <div className="space-y-1">
+                            {getEmail && (
+                              <div className="flex items-center gap-2 text-xs text-slate-600">
+                                <Mail className="w-3.5 h-3.5 text-slate-400" />
+                                {getEmail(item)}
+                              </div>
+                            )}
+
+                            {getPhone && (
+                              <div className="flex items-center gap-2 text-xs text-slate-600">
+                                <Phone className="w-3.5 h-3.5 text-slate-400" />
+                                {getPhone(item)}
+                              </div>
+                            )}
+                          </div>
+                        </td>
+                      )}
                       {enableBookData && (
                         <>
                           <td className="px-6 py-4 whitespace-nowrap">
@@ -390,14 +404,14 @@ function ManagementTable<T, F extends CreateForm | undefined = undefined>({
                             {getRating?.(item)}
                           </td>
                           <td>
-                             <div className="min-w-0">
-                            <p className="text-sm font-bold text-slate-900 truncate">
-                            ₹{getRentPrice?.(item)}
-                            </p>
-                            <p className="text-[10px] font-mono text-slate-400 truncate uppercase">
-                              ₹{getActualPrice?.(item)}
-                            </p>
-                          </div>
+                            <div className="min-w-0">
+                              <p className="text-sm font-bold text-slate-900 truncate">
+                                ₹{getRentPrice?.(item)}
+                              </p>
+                              <p className="text-[10px] font-mono text-slate-400 truncate uppercase">
+                                ₹{getActualPrice?.(item)}
+                              </p>
+                            </div>
                           </td>
                         </>
                       )}
@@ -447,17 +461,32 @@ function ManagementTable<T, F extends CreateForm | undefined = undefined>({
                                 Reject
                               </button>
                             )}
-                            {enableCategory ||
-                              (enableBookData && onEdit && (
-                                <button
-                                  onClick={() => onEdit(item)}
-                                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-bold 
+                            {enableCategory && onEdit && (
+                              <button
+                                onClick={() => onEdit(item)}
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-bold 
                                            bg-white text-blue-600 border border-blue-200 
                                             rounded-lg hover:bg-blue-50 active:scale-95 transition-all"
-                                >
-                                  Edit
-                                </button>
-                              ))}
+                              >
+                                Edit
+                              </button>
+                            )}
+                            {enableBookData && onEdit && (
+                              <button
+                                onClick={() =>
+                                  navigate(
+                                    `/vendor/updateproduct/${getId(
+                                      item
+                                    )}`
+                                  )
+                                }
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-bold 
+                                           bg-white text-blue-600 border border-blue-200 
+                                            rounded-lg hover:bg-blue-50 active:scale-95 transition-all"
+                              >
+                                Edit
+                              </button>
+                            )}
 
                             {onToggleBlock && type !== "pending" && (
                               <button
@@ -500,7 +529,7 @@ function ManagementTable<T, F extends CreateForm | undefined = undefined>({
         </div>
 
         {/* PAGINATION */}
-        <div className="px-6 py-4 bg-slate-50/50 border-t border-slate-100 flex items-center justify-between">
+        {/* <div className="px-6 py-4 bg-slate-50/50 border-t border-slate-100 flex items-center justify-between">
           <p className="text-xs font-semibold text-slate-500 italic">
             Showing{" "}
             <span className="text-slate-900 font-bold">
@@ -527,7 +556,7 @@ function ManagementTable<T, F extends CreateForm | undefined = undefined>({
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* IMAGE PREVIEW */}

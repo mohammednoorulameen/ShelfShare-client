@@ -41,12 +41,16 @@ const UserHeader: React.FC = () => {
     navigate(action);
   };
 
+  const handleNavigate = () =>{
+    navigate('/')
+  }
+
   return (
     <header className="bg-white text-gray-900 sticky top-0 z-50 shadow-md w-full">
-      <div className="max-w-[1280px] mx-auto px-3 py-3 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-3 py-3 flex items-center justify-between">
         
         {/* Logo */}
-        <div className="flex items-center gap-2 cursor-pointer shrink-0">
+        <div  onClick={handleNavigate}  className="flex items-center gap-2 cursor-pointer shrink-0">
           <BookOpen className="w-6 h-6 text-blue-600" />
           <span className="text-xl font-bold tracking-tight">Readify</span>
         </div>
@@ -153,7 +157,7 @@ const UserHeader: React.FC = () => {
           {/* DESKTOP Explore */}
           <div className="hidden sm:flex items-center gap-1 cursor-pointer hover:opacity-80">
             <Compass className="w-5 h-5 text-gray-700" />
-            <span className="text-sm font-medium">Explore</span>
+          <button onClick={() => navigate('/user/explore')}>  <span className="cursor-pointer text-sm font-medium">Explore</span> </button>
           </div>
 
           {/* DESKTOP Notification */}

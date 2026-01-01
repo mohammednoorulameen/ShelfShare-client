@@ -48,7 +48,7 @@ export const VendorRoutes: RouteObject[] = [
         ),
       },
       {
-        path: "addrentbook",
+        path: "addupdaterentbook",
         element: (
           <ProtectedRoute allowedRoles={[Role.VENDOR]}>
             <AddRentBookPage/>
