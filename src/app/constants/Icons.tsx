@@ -1,4 +1,4 @@
-import type { DropdownItem } from "@/types/constants.types";
+import type { DropdownItem } from "@/types/Iconstants.types";
 import {
   User,
   Package,
@@ -64,9 +64,9 @@ export const adminMenu = [
   { icon: CreditCard, label: "Transactions", path: "transactions" },
 ];
 
-/*------
-vendor sidbar icons
------------------------*/
+
+
+// ========================= VENDOR SIDBAR ICONS =========================
 
 export const vendorMenu = [
   { icon: LayoutDashboard, label: "Dashboard", path: "overview" },
@@ -76,6 +76,7 @@ export const vendorMenu = [
 
 
 
+// ========================= ADD BOOKS =========================
 
 
 

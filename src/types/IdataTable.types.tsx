@@ -1,6 +1,6 @@
 /* ================= TYPES ================= */
 
-import type { StatusResult } from "./constants.types";
+import type { StatusResult } from "./Iconstants.types";
 
 export type Column<T> = {
   key: string;

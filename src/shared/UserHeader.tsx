@@ -29,9 +29,9 @@ const UserHeader: React.FC = () => {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  /**--------------
-   * Handle Dropdown Click
-  ----------------*/
+
+  // ==================== HANDLE DROPDOWN CLICK ====================
+
   const handleMenuClick = (action: string) => {
     if (action === "logout") {
       handleLogout();
@@ -173,7 +173,7 @@ const UserHeader: React.FC = () => {
             <Store className="w-5 h-5 text-gray-700" />
             <span className="text-sm font-medium">Become Seller</span>
           </div>
-          <button onClick={()=> navigate('/vendor')}>clcik</button>
+          <button onClick={()=> navigate('/vendor/cart')}>Cart</button>
         </nav>
       </div>
     </header>

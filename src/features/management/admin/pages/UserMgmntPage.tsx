@@ -2,8 +2,8 @@ import { useBlockUser, useGetUsers } from "../api/adminUserMgmntApi";
 import type { User } from "../../types/responseUser.types";
 import ManagementTable from "@/shared/DataTable";
 import { useState } from "react";
-import type { Column } from "@/types/dataTable.types";
-import type { StatusResult } from "@/types/constants.types";
+import type { Column } from "@/types/IdataTable.types";
+import type { StatusResult } from "@/types/Iconstants.types";
 
 /* ================= PAGE ================= */
 

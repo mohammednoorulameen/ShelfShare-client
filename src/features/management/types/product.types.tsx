@@ -9,6 +9,14 @@ export interface ProductRating {
   average: number;
 }
 
+export interface VendorProductsPaginated {
+  data: ProductResponseDto[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
 export interface ProductResponseDto {
   _id: ObjectId;
   vendorId: string;        

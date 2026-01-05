@@ -19,7 +19,7 @@ const AddUpdateRentBook: React.FC<AddRentProdectProps> = (props) => {
     isSubmitting,
     currentVendor,
   } = props;
-  console.log('chekc chekc her ethe categories',categories)
+
   return (
     <div className="max-w-6xl mx-auto">
       {/* Context Header */}

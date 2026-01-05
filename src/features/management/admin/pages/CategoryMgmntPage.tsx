@@ -11,7 +11,7 @@ import type { Category, StatusResult } from "../../types/category.types";
 import { ERROR_MESSAGES } from "@/app/constants/messages";
 import { isAxiosError } from "axios";
 import toast from "react-hot-toast";
-import type { Column } from "@/types/dataTable.types";
+import type { Column } from "@/types/IdataTable.types";
 
 /* ================= PAGE ================= */
 

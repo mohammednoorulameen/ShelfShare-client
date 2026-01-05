@@ -13,8 +13,8 @@ import {
   MoreHorizontal,
   Plus,
 } from "lucide-react";
-import type { CreateForm, ManagementTableProps } from "@/types/dataTable.types";
-import type { StatusType } from "@/types/constants.types";
+import type { CreateForm, ManagementTableProps } from "@/types/IdataTable.types";
+import type { StatusType } from "@/types/Iconstants.types";
 import { useNavigate } from "react-router-dom";
 
 const fallbackImg = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
@@ -529,7 +529,7 @@ function ManagementTable<T, F extends CreateForm | undefined = undefined>({
         </div>
 
         {/* PAGINATION */}
-        {/* <div className="px-6 py-4 bg-slate-50/50 border-t border-slate-100 flex items-center justify-between">
+        <div className="px-6 py-4 bg-slate-50/50 border-t border-slate-100 flex items-center justify-between">
           <p className="text-xs font-semibold text-slate-500 italic">
             Showing{" "}
             <span className="text-slate-900 font-bold">
@@ -556,7 +556,7 @@ function ManagementTable<T, F extends CreateForm | undefined = undefined>({
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>
-        </div> */}
+        </div>
       </div>
 
       {/* IMAGE PREVIEW */}

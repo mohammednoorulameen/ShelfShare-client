@@ -66,6 +66,7 @@ const UpdateProductPage = () => {
     validationSchema: AddBookSchema,
 
    onSubmit: async (values) => {
+
   try {
     let uploadedImages: string[] = [];
 
