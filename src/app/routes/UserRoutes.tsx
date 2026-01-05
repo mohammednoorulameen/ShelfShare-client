@@ -7,6 +7,7 @@ import ResetPasswordPage from "@/features/auth/common/Pages/ResetPasswordPage";
 import PersonalInfoPage from "@/features/account/user/pages/PersonalInfoPage";
 import HomePage from "@/features/home/user/pages/HomePage";
 import ExplorePage from "@/features/home/user/pages/ExplorePage";
+import ProductDetailsPage from "@/features/home/user/pages/ProductDetailsPage";
 
 // // const Home = lazy(() => import("@/features/home/user/Home"));
 
@@ -30,7 +31,7 @@ export const userRoutes: RouteObject[] = [
         ),
       },
       {
-        path : '/user/explore',
+        path: "/user/explore",
         element: (
           <ProtectedRoute allowedRoles={[Role.USER]}>
             <ExplorePage />
@@ -67,6 +68,17 @@ export const userRoutes: RouteObject[] = [
             ),
           },
         ],
+      },
+
+      /* ================= PRODUCT DETAILS ================= */
+
+      {
+        path: "productdetails/:id",
+        element: (
+          <ProtectedRoute allowedRoles={[Role.USER]}>
+            <ProductDetailsPage />
+          </ProtectedRoute>
+        ),
       },
     ],
   },

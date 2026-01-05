@@ -7,8 +7,8 @@ import {
 import type { Vendor } from "../../types/responseVendor.types";
 
 import ManagementTable from "@/shared/DataTable";
-import type { Column } from "@/types/dataTable.types";
-import type { StatusResult } from "@/types/constants.types";
+import type { Column } from "@/types/IdataTable.types";
+import type { StatusResult } from "@/types/Iconstants.types";
 
 /* ================= PAGE ================= */
 

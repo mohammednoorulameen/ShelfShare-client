@@ -60,8 +60,6 @@ const AddRentBookPage = () => {
     enableReinitialize: true,
     validationSchema: AddBookSchema,
     onSubmit: async (values) => {
-      console.log("values", values);
-
       let imageUrls : string[] = []
 
       if(imageFiles.length > 0){

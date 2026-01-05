@@ -3,39 +3,35 @@ import { useGetVendorProducts } from "../api/ProductApi";
 import ManagementTable from "@/shared/DataTable";
 
 import type { Status } from "@/app/constants/status";
-import type { Column } from "@/types/dataTable.types";
-import type { StatusResult } from "@/types/constants.types";
+import type { Column } from "@/types/IdataTable.types";
+import type { StatusResult } from "@/types/Iconstants.types";
 import type { IProduct } from "../../types/product.types";
 
 /* ================= STATUS HANDLER ================= */
 
 const getBookStatus = (book: IProduct): StatusResult => {
-  
   if (book.status === "blocked") {
     return { label: "Inactive", type: "blocked" };
   }
   return { label: "Active", type: "verified" };
 };
 
-
-
 /* ================= PAGE ================= */
 
 const BookMgmntPage = () => {
-    const [books, setBooks] = useState<IProduct[]>([]);
+  const [books, setBooks] = useState<IProduct[]>([]);
   const [page, setPage] = useState(1);
-  const { data, isLoading, isError } = useGetVendorProducts();
+  const { data, isLoading, isError } = useGetVendorProducts(page, 10);
 
-  console.log('check data',data)
+  console.log("check data", data);
 
+  const totalPages = 2;
+  const booksData = data?.data ?? [];
 
-  
-  const totalPages = 2
-
-   useEffect(() => {
+  useEffect(() => {
     if (data) {
       setBooks(
-        data.map((item) => ({
+        booksData.map((item) => ({
           ...item,
           rentDate: new Date(item.rentDate),
           createdAt: new Date(item.createdAt),
@@ -46,7 +42,7 @@ const BookMgmntPage = () => {
     }
   }, [data]);
 
-    const handleToggleBlock = (book: IProduct) => {
+  const handleToggleBlock = (book: IProduct) => {
     setBooks((prev) =>
       prev.map((b) =>
         b._id === book._id
@@ -59,82 +55,80 @@ const BookMgmntPage = () => {
     );
   };
 
-/* ================= HANDLE UPDATE PRODUCT ================= */
+  /* ================= HANDLE UPDATE PRODUCT ================= */
 
-const handleEdit = () =>{
+  const handleEdit = () => {};
 
-}
+  /* ================= TABLE COLUMNS ================= */
 
-/* ================= TABLE COLUMNS ================= */
-
-const bookColumns: Column<IProduct>[] = [
-  {
-    key: "index",
-    header: "#",
-    render: (_, index) => (index + 1).toString().padStart(2, "0"),
-  },
-  {
-    key: "book",
-    header: "Book",
-    render: (b) => (
-      <div className="flex items-center gap-3">
-        <img
-          src={b.imageKey?.[0]}
-          alt={b.productName}
-          className="w-10 h-14 rounded object-cover border"
-        />
-        <div>
-          <p className="font-medium">{b.productName}</p>
-          <p className="text-xs text-slate-500">{b.productId}</p>
-        </div>
-      </div>
-    ),
-  },
-  {
-    key: "createdAt",
-    header: "Date",
-    render: (b) => new Date(b.createdAt).toLocaleDateString(),
-  },
-  {
-    key: "category",
-    header: "Category",
-    render: (b) => b.category,
-  },
-  
-  {
-    key: "publisher",
-    header: "Publisher",
-    render: (b) => b.publisher,
-  },
-  {
-    key: "language",
-    header: "Language",
-    render: (b) => `₹${b.language}`,
-  },
-  {
-    key: "stock",
-    header: "Stock",
-    render: (b) => `₹${b.stock}`,
-  },
-  {
-    key: "rating",
-    header: "Rating",
-    render: (b) => `₹${b.rating}`,
-  },
-  {
-    key: "price",
-    header: "Rent Price",
-    render: (b) => `₹${b.rentPrice}`,
-  },
-  {
-    key: "status",
-    header: "Status",
-    render: (b) => {
-      const status = getBookStatus(b);
-      return <span>{status.label}</span>;
+  const bookColumns: Column<IProduct>[] = [
+    {
+      key: "index",
+      header: "#",
+      render: (_, index) => (index + 1).toString().padStart(2, "0"),
     },
-  },
-   {
+    {
+      key: "book",
+      header: "Book",
+      render: (b) => (
+        <div className="flex items-center gap-3">
+          <img
+            src={b.imageKey?.[0]}
+            alt={b.productName}
+            className="w-10 h-14 rounded object-cover border"
+          />
+          <div>
+            <p className="font-medium">{b.productName}</p>
+            <p className="text-xs text-slate-500">{b.productId}</p>
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: "createdAt",
+      header: "Date",
+      render: (b) => new Date(b.createdAt).toLocaleDateString(),
+    },
+    {
+      key: "category",
+      header: "Category",
+      render: (b) => b.category,
+    },
+
+    {
+      key: "publisher",
+      header: "Publisher",
+      render: (b) => b.publisher,
+    },
+    {
+      key: "language",
+      header: "Language",
+      render: (b) => `₹${b.language}`,
+    },
+    {
+      key: "stock",
+      header: "Stock",
+      render: (b) => `₹${b.stock}`,
+    },
+    {
+      key: "rating",
+      header: "Rating",
+      render: (b) => `₹${b.rating}`,
+    },
+    {
+      key: "price",
+      header: "Rent Price",
+      render: (b) => `₹${b.rentPrice}`,
+    },
+    {
+      key: "status",
+      header: "Status",
+      render: (b) => {
+        const status = getBookStatus(b);
+        return <span>{status.label}</span>;
+      },
+    },
+    {
       key: "actions",
       header: "Actions",
       align: "right",
@@ -151,14 +145,13 @@ const bookColumns: Column<IProduct>[] = [
         </button>
       ),
     },
-];
-
+  ];
 
   return (
     <ManagementTable<IProduct, undefined>
       columns={bookColumns}
       getStatus={getBookStatus}
-      onToggleBlock  = {(c) => handleToggleBlock(c)}
+      onToggleBlock={(c) => handleToggleBlock(c)}
       title="Book Management"
       subtitle="Manage your books, pricing, and availability."
       data={books}
@@ -170,36 +163,18 @@ const bookColumns: Column<IProduct>[] = [
       getName={(b) => b.productName}
       getId={(b) => b.productId}
       getImage={(b) => b.imageKey?.[0]}
-
       getCategory={(b) => b.category}
-
-      getPublisher={(b)=> b.publisher}
-      getLanguage={(b)=> b.language}
-      getStock={(b)=> b.stock.toString()}
-      getRentPrice={(b)=> b.rentPrice}
-      getActualPrice={(b)=> b.actualPrice}
-      getRating={(b)=> b.rating.average}
-      getCreatedDate={(b)=> (b.createdAt).toISOString().split("T")[0]}
-      enableBookData = {true}
-      onEdit = {handleEdit}
-
+      getPublisher={(b) => b.publisher}
+      getLanguage={(b) => b.language}
+      getStock={(b) => b.stock.toString()}
+      getRentPrice={(b) => b.rentPrice}
+      getActualPrice={(b) => b.actualPrice}
+      getRating={(b) => b.rating.average}
+      getCreatedDate={(b) => b.createdAt.toISOString().split("T")[0]}
+      enableBookData={true}
+      onEdit={handleEdit}
     />
   );
 };
 
 export default BookMgmntPage;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

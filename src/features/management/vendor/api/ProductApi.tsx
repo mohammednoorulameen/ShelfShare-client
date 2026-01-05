@@ -5,6 +5,7 @@ import type {
   IProductPayload,
   IUpdateProduct,
   ProductResponseDto,
+  VendorProductsPaginated,
 } from "../../types/product.types";
 
 /* ================= VENDOR ADD PRODUCT ================= */
@@ -23,19 +24,20 @@ export const useAddProductMutation = () => {
 
 /* ================= GET VENDOR PRODUCT  ================= */
 
-export const useGetVendorProducts = () => {
+export const useGetVendorProducts = (page: number, limit: number) => {
   return useQuery({
-    queryKey: ["vendor-products"],
+    queryKey: ["vendor-products", page, limit],
     queryFn: async () => {
       const response = await AxiosInstance.get<
-        ApiResponse<ProductResponseDto[]>
-      >("/vendor/get-vendorproduct", { withCredentials: true });
+        ApiResponse<VendorProductsPaginated>
+      >(`/vendor/get-vendorproduct?page=${page}&limit=${limit}`, {
+        withCredentials: true,
+      });
       return response.data.data;
     },
     placeholderData: (prev) => prev,
   });
 };
-
 
 /* ================= VENDOR GET WHICH PRODUCT UPDATE WITH ID ================= */
 
